@@ -10,9 +10,9 @@ import (
 )
 
 type Category struct {
-	ID   uuid.UUID   `json:"id"`
-	Name string      `json:"name"`
-	Type interface{} `json:"type"`
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+	Type string    `json:"type"`
 }
 
 type Report struct {
@@ -30,7 +30,7 @@ type Transaction struct {
 	ID          uuid.UUID        `json:"id"`
 	UserID      uuid.UUID        `json:"user_id"`
 	Amount      int64            `json:"amount"`
-	Type        interface{}      `json:"type"`
+	Type        string           `json:"type"`
 	Description pgtype.Text      `json:"description"`
 	CategoryID  pgtype.UUID      `json:"category_id"`
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
