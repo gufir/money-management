@@ -1,5 +1,6 @@
 -- name: CreateTransaction :one
-INSERT INTO transaction (
+INSERT INTO "transaction" (
+    id,
     user_id,
     amount,
     type,
@@ -11,9 +12,12 @@ VALUES (
     $2,
     $3,
     $4,
-    $5
-) RETURNING *;
+    $5,
+    $6
+) 
+RETURNING *;
 
 -- name: GetTransaction :one
-SELECT * FROM transaction 
+SELECT * 
+FROM "transaction"
 WHERE id = $1;

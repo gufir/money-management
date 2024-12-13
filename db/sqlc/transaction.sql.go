@@ -13,7 +13,8 @@ import (
 )
 
 const createTransaction = `-- name: CreateTransaction :one
-INSERT INTO transaction (
+INSERT INTO "transaction" (
+    id,
     user_id,
     amount,
     type,
@@ -25,20 +26,24 @@ VALUES (
     $2,
     $3,
     $4,
-    $5
-) RETURNING id, user_id, amount, type, description, category_id, created_at, updated_at, deleted_at
+    $5,
+    $6
+) 
+RETURNING id, user_id, amount, type, description, category_id, created_at, updated_at, deleted_at
 `
 
 type CreateTransactionParams struct {
+	ID          uuid.UUID   `json:"id"`
 	UserID      uuid.UUID   `json:"user_id"`
 	Amount      int64       `json:"amount"`
-	Type        interface{} `json:"type"`
+	Type        string      `json:"type"`
 	Description pgtype.Text `json:"description"`
 	CategoryID  pgtype.UUID `json:"category_id"`
 }
 
 func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionParams) (Transaction, error) {
 	row := q.db.QueryRow(ctx, createTransaction,
+		arg.ID,
 		arg.UserID,
 		arg.Amount,
 		arg.Type,
@@ -61,7 +66,8 @@ func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionPa
 }
 
 const getTransaction = `-- name: GetTransaction :one
-SELECT id, user_id, amount, type, description, category_id, created_at, updated_at, deleted_at FROM transaction 
+SELECT id, user_id, amount, type, description, category_id, created_at, updated_at, deleted_at 
+FROM "transaction"
 WHERE id = $1
 `
 

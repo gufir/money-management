@@ -9,6 +9,9 @@ createdb:
 migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up
 
+dropdb:
+	docker exec -it  db_postgres_1 dropdb --username=root money_management
+
 migratedown:
 	migrate -path db/migration -database "$(DB_URL)" -verbose down
 
@@ -18,4 +21,4 @@ sqlc:
 migration:
 	migrate create -ext sql -dir db/migration -seq init_schema
 
-.PHONY: posgresql sqlc createdb migrateup migratedown migration
+.PHONY: posgresql sqlc createdb migrateup migratedown migration dropdb
