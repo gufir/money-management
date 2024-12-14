@@ -12,12 +12,14 @@ import (
 
 func CreateRandomTransaction(t *testing.T) Transaction {
 	user := CreateRandomUser(t)
+	categories := CreateRandomCategories(t)
 
 	arg := CreateTransactionParams{
-		ID:     uuid.New(),
-		UserID: user.UserUuid,
-		Amount: 1000,
-		Type:   utils.Expense,
+		ID:         uuid.New(),
+		UserID:     user.UserUuid,
+		Amount:     utils.RandomInt(10, 1000),
+		Type:       utils.Expense,
+		CategoryID: categories.ID,
 	}
 
 	transaction, err := testQueries.CreateTransaction(context.Background(), arg)
@@ -26,6 +28,7 @@ func CreateRandomTransaction(t *testing.T) Transaction {
 	require.Equal(t, transaction.UserID, arg.UserID)
 	require.Equal(t, transaction.Amount, arg.Amount)
 	require.Equal(t, transaction.Type, arg.Type)
+	require.Equal(t, transaction.CategoryID, arg.CategoryID)
 
 	require.NotEmpty(t, transaction.CreatedAt)
 	require.NotEmpty(t, transaction.UpdatedAt)

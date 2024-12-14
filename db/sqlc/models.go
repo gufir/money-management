@@ -17,7 +17,7 @@ type Category struct {
 
 type Report struct {
 	ID           uuid.UUID        `json:"id"`
-	UserID       pgtype.UUID      `json:"user_id"`
+	UserID       uuid.UUID        `json:"user_id"`
 	Period       string           `json:"period"`
 	TotalIncome  pgtype.Numeric   `json:"total_income"`
 	TotalExpense pgtype.Numeric   `json:"total_expense"`
@@ -32,7 +32,7 @@ type Transaction struct {
 	Amount      int64            `json:"amount"`
 	Type        string           `json:"type"`
 	Description pgtype.Text      `json:"description"`
-	CategoryID  pgtype.UUID      `json:"category_id"`
+	CategoryID  uuid.UUID        `json:"category_id"`
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
 	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
 	DeletedAt   pgtype.Timestamp `json:"deleted_at"`

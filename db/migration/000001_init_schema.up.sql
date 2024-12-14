@@ -34,7 +34,7 @@ CREATE TABLE "transaction" (
   "amount" bigint NOT NULL,
   "type" transaction_type NOT NULL,
   "description" varchar,
-  "category_id" uuid,
+  "category_id" uuid NOT NULL,
   "created_at" timestamp DEFAULT now(),
   "updated_at" timestamp DEFAULT now(),
   "deleted_at" timestamp
@@ -50,7 +50,7 @@ CREATE TABLE "categories" (
 -- Create the "reports" table
 CREATE TABLE "reports" (
   "id" uuid PRIMARY KEY,
-  "user_id" uuid,
+  "user_id" uuid NOT NULL,
   "period" varchar NOT NULL,
   "total_income" decimal,
   "total_expense" decimal,

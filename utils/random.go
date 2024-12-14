@@ -31,6 +31,16 @@ func RandomString(length int) string {
 	return sb.String()
 }
 
+func RandomPeriod() string {
+	rand.Seed(time.Now().UnixNano())
+
+	year := rand.Intn(31) + 2000
+
+	month := rand.Intn(12) + 1
+
+	return fmt.Sprintf("%d-%02d", year, month)
+}
+
 func RandomName() string {
 	return RandomString(6)
 }

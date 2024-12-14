@@ -11,8 +11,14 @@ import (
 )
 
 type Querier interface {
+	CreateCategories(ctx context.Context, arg CreateCategoriesParams) (Category, error)
+	CreateReportUser(ctx context.Context, arg CreateReportUserParams) error
 	CreateTransaction(ctx context.Context, arg CreateTransactionParams) (Transaction, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	GetDetailsReportbyUser(ctx context.Context, userID uuid.UUID) ([]GetDetailsReportbyUserRow, error)
+	GetReportbyCategory(ctx context.Context) ([]GetReportbyCategoryRow, error)
+	GetReportbyDate(ctx context.Context, arg GetReportbyDateParams) ([]GetReportbyDateRow, error)
+	GetReportbyUser(ctx context.Context, userID uuid.UUID) (GetReportbyUserRow, error)
 	GetTransaction(ctx context.Context, id uuid.UUID) (Transaction, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserById(ctx context.Context, id int64) (User, error)

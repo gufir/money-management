@@ -38,7 +38,7 @@ type CreateTransactionParams struct {
 	Amount      int64       `json:"amount"`
 	Type        string      `json:"type"`
 	Description pgtype.Text `json:"description"`
-	CategoryID  pgtype.UUID `json:"category_id"`
+	CategoryID  uuid.UUID   `json:"category_id"`
 }
 
 func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionParams) (Transaction, error) {
