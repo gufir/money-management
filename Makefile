@@ -21,4 +21,7 @@ sqlc:
 migration:
 	migrate create -ext sql -dir db/migration -seq init_schema
 
-.PHONY: posgresql sqlc createdb migrateup migratedown migration dropdb
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/gufir/money-management/db/sqlc Store
+
+.PHONY: posgresql sqlc createdb migrateup migratedown migration dropdb mock
