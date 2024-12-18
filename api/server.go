@@ -1,36 +1,33 @@
 package api
 
 import (
+	"github.com/gin-gonic/gin"
 	db "github.com/gufir/money-management/db/sqlc"
-	"github.com/gufir/money-management/utils"
-	"github.com/labstack/echo/v4"
 )
 
 type Server struct {
-	config utils.Config
 	store  db.Store
-	router *echo.Echo
+	router *gin.Engine
 }
 
-func NewServer(config utils.Config, store db.Store) (*Server, error) {
-	server := &Server{
-		config: config,
-		store:  store,
-		router: echo.New(),
-	}
+// NewServer creates a new HTTP server and sets up routing.
+func NewServer(store db.Store) *Server {
+	server := &Server{store: store}
+	router := gin.Default()
 
-	server.SetupRouter()
-	return server, nil
-}
+	// Routes
+	router.POST("/users", server.CreateUser)
 
-func (server *Server) SetupRouter() {
-	server.router.POST("/create_users", server.CreateUser)
+	server.router = router
+
+	return server
 }
 
 func (server *Server) Start(address string) error {
-	return server.router.Start(address)
+	return server.router.Run(address)
 }
 
-func ErrorResponse(message string) map[string]string {
-	return map[string]string{"error": message}
+// Helper for generating error responses.
+func errorResponse(message string) gin.H {
+	return gin.H{"error": message}
 }
