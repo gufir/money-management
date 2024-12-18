@@ -4,11 +4,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	db "github.com/gufir/money-management/db/sqlc"
 	"github.com/gufir/money-management/utils"
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/labstack/echo/v4"
 )
 
 type CreateUserRequest struct {
@@ -36,15 +36,17 @@ func NewUserResponse(user db.User) CreateUserResponse {
 	}
 }
 
-func (server *Server) CreateUser(ctx echo.Context) error {
+func (server *Server) CreateUser(ctx *gin.Context) {
 	var req CreateUserRequest
-	if err := ctx.Bind(&req); err != nil {
-		return ctx.JSON(http.StatusBadRequest, ErrorResponse(err.Error()))
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+		return
 	}
 
 	hashedPassword, err := utils.HashPassword(req.Password)
 	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(err.Error()))
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
 	}
 
 	arg := db.CreateUserParams{
@@ -55,17 +57,19 @@ func (server *Server) CreateUser(ctx echo.Context) error {
 		UserUuid:       uuid.New(),
 	}
 
-	user, err := server.store.CreateUser(ctx.Request().Context(), arg)
+	user, err := server.store.CreateUser(ctx, arg)
 	if err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok && pgErr.Code == "23505" {
-			return ctx.JSON(http.StatusConflict, ErrorResponse("username or email already exists"))
+			ctx.JSON(http.StatusConflict, errorResponse("username or email already exists"))
+			return
 		}
 
-		return ctx.JSON(http.StatusInternalServerError, ErrorResponse("Failed to create User"))
+		ctx.JSON(http.StatusInternalServerError, errorResponse("Failed to create User"))
+		return
 	}
 
 	res := NewUserResponse(user)
 
-	return ctx.JSON(http.StatusCreated, res)
+	ctx.JSON(http.StatusOK, res)
 
 }
