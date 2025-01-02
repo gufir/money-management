@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -51,13 +52,13 @@ ORDER BY t.created_at DESC
 `
 
 type GetDetailsReportbyUserRow struct {
-	ID           uuid.UUID        `json:"id"`
-	UserID       uuid.UUID        `json:"user_id"`
-	CategoryID   uuid.UUID        `json:"category_id"`
-	CategoryName string           `json:"category_name"`
-	Amount       int64            `json:"amount"`
-	Description  pgtype.Text      `json:"description"`
-	CreatedAt    pgtype.Timestamp `json:"created_at"`
+	ID           uuid.UUID   `json:"id"`
+	UserID       uuid.UUID   `json:"user_id"`
+	CategoryID   uuid.UUID   `json:"category_id"`
+	CategoryName string      `json:"category_name"`
+	Amount       int64       `json:"amount"`
+	Description  pgtype.Text `json:"description"`
+	CreatedAt    time.Time   `json:"created_at"`
 }
 
 func (q *Queries) GetDetailsReportbyUser(ctx context.Context, userID uuid.UUID) ([]GetDetailsReportbyUserRow, error) {
@@ -133,20 +134,20 @@ ORDER BY t.created_at DESC
 `
 
 type GetReportbyDateParams struct {
-	UserID      uuid.UUID        `json:"user_id"`
-	CreatedAt   pgtype.Timestamp `json:"created_at"`
-	CreatedAt_2 pgtype.Timestamp `json:"created_at_2"`
+	UserID      uuid.UUID `json:"user_id"`
+	CreatedAt   time.Time `json:"created_at"`
+	CreatedAt_2 time.Time `json:"created_at_2"`
 }
 
 type GetReportbyDateRow struct {
-	ID           uuid.UUID        `json:"id"`
-	UserID       uuid.UUID        `json:"user_id"`
-	CategoryID   uuid.UUID        `json:"category_id"`
-	CategoryName string           `json:"category_name"`
-	Amount       int64            `json:"amount"`
-	Type         string           `json:"type"`
-	Description  pgtype.Text      `json:"description"`
-	CreatedAt    pgtype.Timestamp `json:"created_at"`
+	ID           uuid.UUID   `json:"id"`
+	UserID       uuid.UUID   `json:"user_id"`
+	CategoryID   uuid.UUID   `json:"category_id"`
+	CategoryName string      `json:"category_name"`
+	Amount       int64       `json:"amount"`
+	Type         string      `json:"type"`
+	Description  pgtype.Text `json:"description"`
+	CreatedAt    time.Time   `json:"created_at"`
 }
 
 func (q *Queries) GetReportbyDate(ctx context.Context, arg GetReportbyDateParams) ([]GetReportbyDateRow, error) {

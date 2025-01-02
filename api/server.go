@@ -1,26 +1,49 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	db "github.com/gufir/money-management/db/sqlc"
+	"github.com/gufir/money-management/token"
+	"github.com/gufir/money-management/utils"
 )
 
 type Server struct {
+	config utils.Config
 	store  db.Store
+	token  token.Maker
 	router *gin.Engine
 }
 
 // NewServer creates a new HTTP server and sets up routing.
-func NewServer(store db.Store) *Server {
-	server := &Server{store: store}
-	router := gin.Default()
+func NewServer(config utils.Config, store db.Store) (*Server, error) {
+	tokenMaker, err := token.NewJWTMaker(config.TokenSymmetricKey)
+	if err != nil {
+		return nil, fmt.Errorf("cannot create token maker %w", err)
+	}
 
-	// Routes
+	server := &Server{
+		config: config,
+		store:  store,
+		token:  tokenMaker,
+	}
+
+	server.SetupRouter()
+
+	return server, nil
+}
+
+func (server *Server) SetupRouter() {
+	router := gin.Default()
 	router.POST("/users", server.CreateUser)
+	router.POST("/users/login", server.LoginUser)
+	router.POST("/users/renew", server.renewAccessToken)
+
+	// AuthRoutes := router.Group("/").Use(AuthMiddleware(server.token))
+	// AuthRoutes.POST("transfers", server.createTransfer)
 
 	server.router = router
-
-	return server
 }
 
 func (server *Server) Start(address string) error {

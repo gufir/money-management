@@ -2,3 +2,4 @@ DROP TABLE IF EXISTS "transaction";
 DROP TABLE IF EXISTS "categories";
 DROP TABLE IF EXISTS "reports";
 DROP TABLE IF EXISTS "users";
+DROP TABLE IF EXISTS "sessions";
