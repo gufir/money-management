@@ -5,6 +5,8 @@
 package db
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -16,37 +18,45 @@ type Category struct {
 }
 
 type Report struct {
-	ID           uuid.UUID        `json:"id"`
-	UserID       uuid.UUID        `json:"user_id"`
-	Period       string           `json:"period"`
-	TotalIncome  pgtype.Numeric   `json:"total_income"`
-	TotalExpense pgtype.Numeric   `json:"total_expense"`
-	CreatedAt    pgtype.Timestamp `json:"created_at"`
-	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
-	DeletedAt    pgtype.Timestamp `json:"deleted_at"`
+	ID           uuid.UUID          `json:"id"`
+	UserID       uuid.UUID          `json:"user_id"`
+	Period       string             `json:"period"`
+	TotalIncome  pgtype.Numeric     `json:"total_income"`
+	TotalExpense pgtype.Numeric     `json:"total_expense"`
+	CreatedAt    time.Time          `json:"created_at"`
+	UpdatedAt    time.Time          `json:"updated_at"`
+	DeletedAt    pgtype.Timestamptz `json:"deleted_at"`
+}
+
+type Session struct {
+	ID           uuid.UUID `json:"id"`
+	UserID       uuid.UUID `json:"user_id"`
+	RefreshToken string    `json:"refresh_token"`
+	ExpiresAt    time.Time `json:"expires_at"`
+	CreatedAt    time.Time `json:"created_at"`
 }
 
 type Transaction struct {
-	ID          uuid.UUID        `json:"id"`
-	UserID      uuid.UUID        `json:"user_id"`
-	Amount      int64            `json:"amount"`
-	Type        string           `json:"type"`
-	Description pgtype.Text      `json:"description"`
-	CategoryID  uuid.UUID        `json:"category_id"`
-	CreatedAt   pgtype.Timestamp `json:"created_at"`
-	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
-	DeletedAt   pgtype.Timestamp `json:"deleted_at"`
+	ID          uuid.UUID          `json:"id"`
+	UserID      uuid.UUID          `json:"user_id"`
+	Amount      int64              `json:"amount"`
+	Type        string             `json:"type"`
+	Description pgtype.Text        `json:"description"`
+	CategoryID  uuid.UUID          `json:"category_id"`
+	CreatedAt   time.Time          `json:"created_at"`
+	UpdatedAt   time.Time          `json:"updated_at"`
+	DeletedAt   pgtype.Timestamptz `json:"deleted_at"`
 }
 
 type User struct {
-	ID             int64            `json:"id"`
-	Username       string           `json:"username"`
-	FullName       string           `json:"full_name"`
-	Email          string           `json:"email"`
-	HashedPassword string           `json:"hashed_password"`
-	Role           string           `json:"role"`
-	CreatedAt      pgtype.Timestamp `json:"created_at"`
-	UpdatedAt      pgtype.Timestamp `json:"updated_at"`
-	DeletedAt      pgtype.Timestamp `json:"deleted_at"`
-	UserUuid       uuid.UUID        `json:"user_uuid"`
+	ID             int64              `json:"id"`
+	Username       string             `json:"username"`
+	FullName       string             `json:"full_name"`
+	Email          string             `json:"email"`
+	HashedPassword string             `json:"hashed_password"`
+	Role           string             `json:"role"`
+	CreatedAt      time.Time          `json:"created_at"`
+	UpdatedAt      time.Time          `json:"updated_at"`
+	DeletedAt      pgtype.Timestamptz `json:"deleted_at"`
+	UserUuid       uuid.UUID          `json:"user_uuid"`
 }

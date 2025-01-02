@@ -21,10 +21,13 @@ sqlc:
 migration:
 	migrate create -ext sql -dir db/migration -seq init_schema
 
+new_migration:
+	migrate create -ext sql -dir db/migration -seq $(name)
+
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/gufir/money-management/db/sqlc Store
 
 run:
 	go run main.go
 
-.PHONY: server posgresql sqlc createdb migrateup migratedown migration dropdb mock
+.PHONY: server posgresql sqlc createdb migrateup migratedown migration dropdb mock new_migration

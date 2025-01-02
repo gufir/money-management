@@ -49,6 +49,6 @@ func TestGetTransaction(t *testing.T) {
 	require.Equal(t, transaction1.Amount, transaction2.Amount)
 	require.Equal(t, transaction1.Type, transaction2.Type)
 
-	require.WithinDuration(t, transaction1.CreatedAt.Time, transaction2.CreatedAt.Time, time.Second)
+	require.WithinDuration(t, transaction1.CreatedAt, transaction2.CreatedAt, time.Second)
 
 }
