@@ -30,4 +30,12 @@ mock:
 run:
 	go run main.go
 
-.PHONY: server posgresql sqlc createdb migrateup migratedown migration dropdb mock new_migration
+proto:
+	rm -rf pb/*.go
+	protoc --proto_path=proto \
+		--go_out=pb --go_opt=paths=source_relative \
+		--go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+		--experimental_allow_proto3_optional \
+		proto/*.proto
+
+.PHONY: server posgresql sqlc createdb migrateup migratedown migration dropdb mock new_migration proto

@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -116,6 +117,50 @@ LIMIT 1
 
 func (q *Queries) GetUserByUsername(ctx context.Context, username string) (User, error) {
 	row := q.db.QueryRow(ctx, getUserByUsername, username)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.FullName,
+		&i.Email,
+		&i.HashedPassword,
+		&i.Role,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+		&i.UserUuid,
+	)
+	return i, err
+}
+
+const updateUser = `-- name: UpdateUser :one
+UPDATE users
+SET
+    hashed_password = COALESCE($1, hashed_password),
+    updated_at = COALESCE($2, updated_at),
+    full_name = COALESCE($3, full_name),
+    email = COALESCE($4, email)
+WHERE
+    username = $5
+RETURNING id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid
+`
+
+type UpdateUserParams struct {
+	HashedPassword pgtype.Text        `json:"hashed_password"`
+	UpdatedAt      pgtype.Timestamptz `json:"updated_at"`
+	FullName       pgtype.Text        `json:"full_name"`
+	Email          pgtype.Text        `json:"email"`
+	Username       string             `json:"username"`
+}
+
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
+	row := q.db.QueryRow(ctx, updateUser,
+		arg.HashedPassword,
+		arg.UpdatedAt,
+		arg.FullName,
+		arg.Email,
+		arg.Username,
+	)
 	var i User
 	err := row.Scan(
 		&i.ID,
