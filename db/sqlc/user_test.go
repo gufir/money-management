@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gufir/money-management/utils"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 )
 
@@ -89,4 +90,64 @@ func TestGetUserByEmail(t *testing.T) {
 	require.Equal(t, user1.Email, user2.Email)
 
 	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
+}
+
+func TestUpdateUserOnlyFullName(t *testing.T) {
+	oldUser := CreateRandomUser(t)
+	newFullName := utils.RandomName()
+	updateUser, err := testQueries.UpdateUser(context.Background(), UpdateUserParams{
+		Username: oldUser.Username,
+		FullName: pgtype.Text{
+			String: newFullName,
+			Valid:  true,
+		},
+	})
+
+	require.NoError(t, err)
+	require.NotEqual(t, oldUser.FullName, updateUser.FullName)
+	require.Equal(t, oldUser.Username, updateUser.Username)
+	require.Equal(t, oldUser.Email, updateUser.Email)
+	require.Equal(t, oldUser.UserUuid, updateUser.UserUuid)
+	require.Equal(t, oldUser.HashedPassword, updateUser.HashedPassword)
+}
+
+func TestUpdateUserOnlyEmail(t *testing.T) {
+	oldUser := CreateRandomUser(t)
+	newEmail := utils.RandomEmail()
+	updateUser, err := testQueries.UpdateUser(context.Background(), UpdateUserParams{
+		Username: oldUser.Username,
+		Email: pgtype.Text{
+			String: newEmail,
+			Valid:  true,
+		},
+	})
+
+	require.NoError(t, err)
+	require.NotEqual(t, oldUser.Email, updateUser.Email)
+	require.Equal(t, oldUser.Username, updateUser.Username)
+	require.Equal(t, oldUser.FullName, updateUser.FullName)
+	require.Equal(t, oldUser.UserUuid, updateUser.UserUuid)
+	require.Equal(t, oldUser.HashedPassword, updateUser.HashedPassword)
+}
+
+func TestUpdateUserOnlyPassword(t *testing.T) {
+	oldUser := CreateRandomUser(t)
+	newPassword := utils.RandomString(6)
+	newHashedPassword, err := utils.HashPassword(newPassword)
+	require.NoError(t, err)
+
+	updateUser, err := testQueries.UpdateUser(context.Background(), UpdateUserParams{
+		Username: oldUser.Username,
+		HashedPassword: pgtype.Text{
+			String: newHashedPassword,
+			Valid:  true,
+		},
+	})
+
+	require.NoError(t, err)
+	require.NotEqual(t, oldUser.HashedPassword, updateUser.HashedPassword)
+	require.Equal(t, oldUser.Username, updateUser.Username)
+	require.Equal(t, oldUser.FullName, updateUser.FullName)
+	require.Equal(t, oldUser.UserUuid, updateUser.UserUuid)
+
 }

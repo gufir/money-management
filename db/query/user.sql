@@ -28,3 +28,14 @@ LIMIT 1;
 SELECT * FROM users 
 WHERE email = $1
 LIMIT 1;
+
+-- name: UpdateUser :one
+UPDATE users
+SET
+    hashed_password = COALESCE(sqlc.narg(hashed_password), hashed_password),
+    updated_at = COALESCE(sqlc.narg(updated_at), updated_at),
+    full_name = COALESCE(sqlc.narg(full_name), full_name),
+    email = COALESCE(sqlc.narg(email), email)
+WHERE
+    username = sqlc.arg(username)
+RETURNING *;
