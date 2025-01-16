@@ -4,7 +4,7 @@ package pb;
 
 import "user.proto";
 
-option go_package = "github.com/gufir/simple-bank/pb";
+option go_package = "github.com/gufir/money-management/pb";
 
 message UpdateUserRequest {
     string username = 1;
