@@ -38,4 +38,16 @@ proto:
 		--experimental_allow_proto3_optional \
 		proto/*.proto
 
-.PHONY: server posgresql sqlc createdb migrateup migratedown migration dropdb mock new_migration proto
+proto1:
+	rm -f pb/*.go
+	rm -f doc/swagger/*.swagger.json
+	rm -f doc/statik/statik.go
+	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
+		--go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+		--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
+		--openapiv2_out=doc/swagger --openapiv2_opt=allow_merge=true,merge_file_name=money_management \
+		--experimental_allow_proto3_optional \
+		proto/*.proto
+		statik -src=./doc/swagger -dest=./doc/
+
+.PHONY: server posgresql sqlc createdb migrateup migratedown migration dropdb mock new_migration proto proto1

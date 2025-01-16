@@ -4,13 +4,14 @@ package pb;
 
 import "user.proto";
 
-option go_package = "github.com/gufir/simple-bank/pb";
+option go_package = "github.com/gufir/money-management/pb";
 
+// Request message for creating a user
 message CreateUserRequest {
     string username = 1;
-    string password = 2;
-    string full_name = 3;
-    string email = 4;
+    string full_name = 2;
+    string email = 3;
+    string password = 4;
 }
 
 message CreateUserResponse {
