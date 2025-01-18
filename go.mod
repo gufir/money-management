@@ -9,6 +9,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.25.1
 	github.com/jackc/pgx/v5 v5.7.1
+	github.com/rakyll/statik v0.1.7
 	github.com/rs/zerolog v1.33.0
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.10.0
