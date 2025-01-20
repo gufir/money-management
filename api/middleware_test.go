@@ -28,7 +28,7 @@ func AddAuthorization(
 	require.NoError(t, err)
 	require.NotEmpty(t, payload)
 	authorizationHeader := fmt.Sprintf("%s %s", authorizationType, accessToken)
-	request.Header.Set(authorizationHeaderKey, authorizationHeader)
+	request.Header.Set(authorizationHeaderkey, authorizationHeader)
 }
 
 func TestAuthMiddleware(t *testing.T) {
@@ -103,7 +103,7 @@ func TestAuthMiddleware(t *testing.T) {
 			authPath := "/auth"
 			server.router.GET(
 				authPath,
-				AuthMiddleware(server.token),
+				authMiddleware(server.token),
 				func(ctx *gin.Context) {
 					ctx.JSON(http.StatusOK, gin.H{})
 				},

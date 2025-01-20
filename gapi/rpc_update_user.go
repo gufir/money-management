@@ -2,7 +2,7 @@ package gapi
 
 import (
 	"context"
-	"errors"
+	"database/sql"
 	"time"
 
 	db "github.com/gufir/money-management/db/sqlc"
@@ -16,7 +16,8 @@ import (
 )
 
 func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
-	authPayload, err := server.authorizeUser(ctx, []string{utils.AdminRole, utils.UserRole})
+
+	authPayload, err := server.authorizeUser(ctx)
 	if err != nil {
 		return nil, unauthorizedError(err)
 	}
@@ -26,7 +27,7 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 		return nil, InvalidArgumentError(violations)
 	}
 
-	if authPayload.Role != utils.AdminRole && authPayload.Username != req.GetUsername() {
+	if authPayload.Username != req.GetUsername() {
 		return nil, status.Errorf(codes.PermissionDenied, "can't update another user")
 	}
 
@@ -61,7 +62,7 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 
 	user, err := server.store.UpdateUser(ctx, arg)
 	if err != nil {
-		if errors.Is(err, db.ErrRecordNotFound) {
+		if err == sql.ErrNoRows {
 			return nil, status.Errorf(codes.NotFound, "user not found: %v", err)
 		}
 
@@ -74,7 +75,6 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 	}
 
 	return rsp, nil
-
 }
 
 func ValidateUpdateUserRequest(req *pb.UpdateUserRequest) (violations []*errdetails.BadRequest_FieldViolation) {
