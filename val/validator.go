@@ -24,11 +24,9 @@ func ValidateUsername(value string) error {
 	if err := ValidateString(value, 3, 100); err != nil {
 		return err
 	}
-
 	if !isValidUsername(value) {
-		return fmt.Errorf("must contain only lowercase letters, number and underscores")
+		return fmt.Errorf("must contain only lowercase letters, numbers, and underscores")
 	}
-
 	return nil
 }
 

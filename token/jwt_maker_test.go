@@ -16,7 +16,7 @@ func TestJWTMaker(t *testing.T) {
 	username := utils.RandomName()
 	userID := uuid.New()
 	role := utils.UserRole
-	duration := time.Minute
+	duration := time.Hour
 
 	IssuedAt := time.Now()
 	ExpiredAt := IssuedAt.Add(duration)
