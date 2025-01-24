@@ -7,6 +7,7 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/rakyll/statik/fs"
+	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -111,13 +112,19 @@ func runGatewayServer(config utils.Config, store db.Store) {
 	mux.Handle("/swagger/", swaggerHandler)
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
-
 	if err != nil {
 		log.Fatal().Msgf("cannot listen to gRPC server on %s: %v", config.GRPCServerAddress, err)
 	}
 
+	corsHandler := cors.New(cors.Options{
+		AllowedOrigins:   config.AllowedOrigins,
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}).Handler(mux)
+
 	log.Info().Msgf("start HTTP gateway server on %s", listener.Addr().String())
-	handler := gapi.HttpLogger(mux)
+	handler := gapi.HttpLogger(corsHandler)
 
 	err = http.Serve(listener, handler)
 	if err != nil {
