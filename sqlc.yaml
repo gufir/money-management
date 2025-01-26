@@ -20,4 +20,6 @@ sql:
             go_type: "string"  # Map to Go string (or a custom type if needed)
           - db_type: "category_type"
             go_type: "string"  # Map to Go string (or a custom type if needed)
+          - db_type: "text"
+            go_type: "string"  # Map to Go string (or a custom type if needed)
 

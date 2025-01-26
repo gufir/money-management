@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gufir/money-management/utils"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 )
 
@@ -15,11 +16,12 @@ func CreateRandomTransaction(t *testing.T) Transaction {
 	categories := CreateRandomCategories(t)
 
 	arg := CreateTransactionParams{
-		ID:         uuid.New(),
-		UserID:     user.UserUuid,
-		Amount:     utils.RandomInt(10, 1000),
-		Type:       utils.Expense,
-		CategoryID: categories.ID,
+		ID:          uuid.New(),
+		UserID:      user.UserUuid,
+		Amount:      utils.RandomInt(10, 1000),
+		Type:        utils.Expense,
+		CategoryID:  categories.ID,
+		Description: pgtype.Text{String: utils.RandomString(10), Valid: true},
 	}
 
 	transaction, err := testQueries.CreateTransaction(context.Background(), arg)
@@ -51,4 +53,24 @@ func TestGetTransaction(t *testing.T) {
 
 	require.WithinDuration(t, transaction1.CreatedAt, transaction2.CreatedAt, time.Second)
 
+}
+
+func TestGetTransactionbyType(t *testing.T) {
+	transaction1 := CreateRandomTransaction(t)
+	params := GetTransactionByTypeParams{
+		Type:   transaction1.Type,
+		UserID: transaction1.UserID,
+	}
+
+	transactions, err := testQueries.GetTransactionByType(context.Background(), params)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, transactions)
+
+	transaction2 := transactions[0]
+
+	require.Equal(t, transaction1.UserID, transaction2.UserID)
+	require.Equal(t, transaction1.Amount, transaction2.Amount)
+	require.Equal(t, transaction1.Type, transaction2.Type)
+	require.WithinDuration(t, transaction1.CreatedAt, transaction2.CreatedAt, time.Second)
 }
