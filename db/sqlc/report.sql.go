@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createReportUser = `-- name: CreateReportUser :exec
@@ -52,13 +51,13 @@ ORDER BY t.created_at DESC
 `
 
 type GetDetailsReportbyUserRow struct {
-	ID           uuid.UUID   `json:"id"`
-	UserID       uuid.UUID   `json:"user_id"`
-	CategoryID   uuid.UUID   `json:"category_id"`
-	CategoryName string      `json:"category_name"`
-	Amount       int64       `json:"amount"`
-	Description  pgtype.Text `json:"description"`
-	CreatedAt    time.Time   `json:"created_at"`
+	ID           uuid.UUID `json:"id"`
+	UserID       uuid.UUID `json:"user_id"`
+	CategoryID   uuid.UUID `json:"category_id"`
+	CategoryName string    `json:"category_name"`
+	Amount       int64     `json:"amount"`
+	Description  string    `json:"description"`
+	CreatedAt    time.Time `json:"created_at"`
 }
 
 func (q *Queries) GetDetailsReportbyUser(ctx context.Context, userID uuid.UUID) ([]GetDetailsReportbyUserRow, error) {
@@ -140,14 +139,14 @@ type GetReportbyDateParams struct {
 }
 
 type GetReportbyDateRow struct {
-	ID           uuid.UUID   `json:"id"`
-	UserID       uuid.UUID   `json:"user_id"`
-	CategoryID   uuid.UUID   `json:"category_id"`
-	CategoryName string      `json:"category_name"`
-	Amount       int64       `json:"amount"`
-	Type         string      `json:"type"`
-	Description  pgtype.Text `json:"description"`
-	CreatedAt    time.Time   `json:"created_at"`
+	ID           uuid.UUID `json:"id"`
+	UserID       uuid.UUID `json:"user_id"`
+	CategoryID   uuid.UUID `json:"category_id"`
+	CategoryName string    `json:"category_name"`
+	Amount       int64     `json:"amount"`
+	Type         string    `json:"type"`
+	Description  string    `json:"description"`
+	CreatedAt    time.Time `json:"created_at"`
 }
 
 func (q *Queries) GetReportbyDate(ctx context.Context, arg GetReportbyDateParams) ([]GetReportbyDateRow, error) {

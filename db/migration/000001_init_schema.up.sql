@@ -33,7 +33,7 @@ CREATE TABLE transaction (
   "user_id" uuid NOT NULL,
   "amount" bigint NOT NULL,
   "type" transaction_type NOT NULL,
-  "description" varchar,
+  "description" varchar NOT NULL,
   "category_id" uuid NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT(now()),
   "updated_at" timestamptz NOT NULL DEFAULT(now()),
