@@ -7,7 +7,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gufir/money-management/utils"
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 )
 
@@ -21,7 +20,7 @@ func CreateRandomTransaction(t *testing.T) Transaction {
 		Amount:      utils.RandomInt(10, 1000),
 		Type:        utils.Expense,
 		CategoryID:  categories.ID,
-		Description: pgtype.Text{String: utils.RandomString(10), Valid: true},
+		Description: utils.RandomString(10),
 	}
 
 	transaction, err := testQueries.CreateTransaction(context.Background(), arg)

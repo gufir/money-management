@@ -33,12 +33,12 @@ RETURNING id, user_id, amount, type, description, category_id, created_at, updat
 `
 
 type CreateTransactionParams struct {
-	ID          uuid.UUID   `json:"id"`
-	UserID      uuid.UUID   `json:"user_id"`
-	Amount      int64       `json:"amount"`
-	Type        string      `json:"type"`
-	Description pgtype.Text `json:"description"`
-	CategoryID  uuid.UUID   `json:"category_id"`
+	ID          uuid.UUID `json:"id"`
+	UserID      uuid.UUID `json:"user_id"`
+	Amount      int64     `json:"amount"`
+	Type        string    `json:"type"`
+	Description string    `json:"description"`
+	CategoryID  uuid.UUID `json:"category_id"`
 }
 
 func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionParams) (Transaction, error) {
