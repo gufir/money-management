@@ -3,6 +3,7 @@ package gapi
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	db "github.com/gufir/money-management/db/sqlc"
@@ -48,21 +49,15 @@ func (server *Server) LoginUser(ctx context.Context, req *pb.LoginUserRequest) (
 		return nil, status.Errorf(codes.Internal, "failed to create refresh token: %v", err)
 	}
 
-	session, err := server.store.CreateSession(ctx, db.CreateSessionParams{
-		ID:           uuid.UUID(refreshPayload.ID),
-		UserID:       user.UserUuid,
-		RefreshToken: refreshToken,
-		ExpiresAt:    refreshPayload.ExpiredAt,
-		CreatedAt:    refreshPayload.CreatedAt,
-	})
-
+	sessionID := uuid.UUID(refreshPayload.ID).String()
+	err = server.redisClient.Set(ctx, sessionID, refreshToken, time.Until(refreshPayload.ExpiredAt)).Err()
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to create refresh session: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to store session in Redis: %v", err)
 	}
 
 	rsp := &pb.LoginUserResponse{
 		User:                  ConvertUser(user),
-		Id:                    session.ID.String(),
+		Id:                    sessionID,
 		AccessToken:           accessToken,
 		RefreshToken:          refreshToken,
 		AccessTokenExpiredAt:  timestamppb.New(accessPayload.ExpiredAt),
