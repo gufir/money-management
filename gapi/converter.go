@@ -15,3 +15,14 @@ func ConvertUser(user db.User) *pb.User {
 		UserUuid:  user.UserUuid.String(),
 	}
 }
+
+func ConvertTransaction(transaction db.Transaction) *pb.Transaction {
+	return &pb.Transaction{
+		Amount:      transaction.Amount,
+		Type:        transaction.Type,
+		Description: transaction.Description,
+		CreatedAt:   timestamppb.New(transaction.CreatedAt),
+		UpdatedAt:   timestamppb.New(transaction.UpdatedAt),
+		UserId:      transaction.UserID.String(),
+	}
+}

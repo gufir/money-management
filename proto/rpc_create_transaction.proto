@@ -1,0 +1,17 @@
+syntax = "proto3";
+package pb;
+
+import "transaction.proto";
+
+option go_package = "github.com/gufir/money-management/pb";
+
+message CreateTransactionRequest {
+    int64 amount = 1;
+    string description = 2;
+    string type = 3;
+    string user_id = 4;
+}
+
+message CreateTransactionResponse {
+    Transaction transaction = 1;
+}

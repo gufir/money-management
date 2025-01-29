@@ -7,13 +7,15 @@ import "rpc_create_user.proto";
 import "rpc_login_user.proto";
 import "rpc_update_user.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
+import "rpc_create_transaction.proto";
+
 
 option go_package = "github.com/gufir/money-management/pb";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     info: {
       title: "Money Management API"
-      version: "1.0"
+      version: "1.1"
       contact: {
         name: "gufir"
         url: "https://github.com/gufir"
@@ -59,4 +61,28 @@ service MoneyManagement {
             summary: "Login user"
         };
     };
+
+    rpc CreateTransaction (CreateTransactionRequest) returns (CreateTransactionResponse){
+        option (google.api.http) = {
+            post: "/v1/create_transaction"
+            body: "*"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to create a new transaction."
+            summary: "Create a new transaction"
+        };
+    }
+
+    rpc UpdateTransaction (UpdateTransactionRequest) returns (UpdateTransactionResponse){
+        option (google.api.http) = {
+            post: "/v1/update_transaction"
+            body: "*"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to update transaction."
+            summary: "Update transaction"
+        };
+    }
 }
