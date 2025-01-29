@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Money Management API",
-    "version": "1.0",
+    "version": "1.1",
     "contact": {
       "name": "gufir",
       "url": "https://github.com/gufir",
@@ -21,6 +21,40 @@
     "application/json"
   ],
   "paths": {
+    "/v1/create_transaction": {
+      "post": {
+        "summary": "Create a new transaction",
+        "description": "Use this API to create a new transaction.",
+        "operationId": "MoneyManagement_CreateTransaction",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateTransactionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreateTransactionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
     "/v1/create_user": {
       "post": {
         "summary": "Create a new user",
@@ -89,6 +123,40 @@
         ]
       }
     },
+    "/v1/update_transaction": {
+      "post": {
+        "summary": "Update transaction",
+        "description": "Use this API to update transaction.",
+        "operationId": "MoneyManagement_UpdateTransaction",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateTransactionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdateTransactionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
     "/v1/update_user": {
       "post": {
         "summary": "Update user",
@@ -125,6 +193,32 @@
     }
   },
   "definitions": {
+    "pbCreateTransactionRequest": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "pbCreateTransactionResponse": {
+      "type": "object",
+      "properties": {
+        "transaction": {
+          "$ref": "#/definitions/pbTransaction"
+        }
+      }
+    },
     "pbCreateUserRequest": {
       "type": "object",
       "properties": {
@@ -184,6 +278,61 @@
         "refreshTokenExpiredAt": {
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "pbTransaction": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "type": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "categoryId": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "pbUpdateTransactionRequest": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "categoryId": {
+          "type": "string"
+        }
+      }
+    },
+    "pbUpdateTransactionResponse": {
+      "type": "object",
+      "properties": {
+        "transaction": {
+          "$ref": "#/definitions/pbTransaction"
         }
       }
     },
