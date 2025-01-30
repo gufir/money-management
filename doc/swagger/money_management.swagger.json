@@ -208,6 +208,9 @@
         },
         "userId": {
           "type": "string"
+        },
+        "categoryId": {
+          "type": "string"
         }
       }
     },
@@ -284,6 +287,9 @@
     "pbTransaction": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
         "amount": {
           "type": "string",
           "format": "int64"
@@ -324,6 +330,9 @@
           "type": "string"
         },
         "categoryId": {
+          "type": "string"
+        },
+        "userId": {
           "type": "string"
         }
       }

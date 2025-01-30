@@ -7,11 +7,12 @@ import "google/protobuf/timestamp.proto";
 option go_package = "github.com/gufir/money-management/pb";
 
 message Transaction {
-    int64 amount = 1;
-    string type = 2;
-    string description = 3;
-    string category_id = 4;
-    google.protobuf.Timestamp created_at = 5;
-    google.protobuf.Timestamp updated_at = 6;
-    string user_id = 7;
+    string id = 1;
+    int64 amount = 2;
+    string type = 3;
+    string description = 4;
+    string category_id = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+    string user_id = 8;
 }

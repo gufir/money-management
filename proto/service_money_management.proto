@@ -8,6 +8,7 @@ import "rpc_login_user.proto";
 import "rpc_update_user.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "rpc_create_transaction.proto";
+import "rpc_update_transaction.proto";
 
 
 option go_package = "github.com/gufir/money-management/pb";

@@ -15,25 +15,22 @@ const createCategories = `-- name: CreateCategories :one
 
 INSERT INTO categories (
     id,
-    name,
-    type
+    name
 ) VALUES (
     $1,
-    $2,
-    $3
+    $2
 )
-RETURNING id, name, type
+RETURNING id, name
 `
 
 type CreateCategoriesParams struct {
 	ID   uuid.UUID `json:"id"`
 	Name string    `json:"name"`
-	Type string    `json:"type"`
 }
 
 func (q *Queries) CreateCategories(ctx context.Context, arg CreateCategoriesParams) (Category, error) {
-	row := q.db.QueryRow(ctx, createCategories, arg.ID, arg.Name, arg.Type)
+	row := q.db.QueryRow(ctx, createCategories, arg.ID, arg.Name)
 	var i Category
-	err := row.Scan(&i.ID, &i.Name, &i.Type)
+	err := row.Scan(&i.ID, &i.Name)
 	return i, err
 }

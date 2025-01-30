@@ -29,7 +29,7 @@ VALUES (
     $5,
     $6
 ) 
-RETURNING id, user_id, amount, type, description, category_id, created_at, updated_at, deleted_at
+RETURNING id, user_id, amount, type, category_id, description, created_at, updated_at, deleted_at
 `
 
 type CreateTransactionParams struct {
@@ -56,8 +56,8 @@ func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionPa
 		&i.UserID,
 		&i.Amount,
 		&i.Type,
-		&i.Description,
 		&i.CategoryID,
+		&i.Description,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.DeletedAt,
@@ -66,7 +66,7 @@ func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionPa
 }
 
 const getTransaction = `-- name: GetTransaction :one
-SELECT id, user_id, amount, type, description, category_id, created_at, updated_at, deleted_at 
+SELECT id, user_id, amount, type, category_id, description, created_at, updated_at, deleted_at 
 FROM "transaction"
 WHERE id = $1
 `
@@ -79,8 +79,8 @@ func (q *Queries) GetTransaction(ctx context.Context, id uuid.UUID) (Transaction
 		&i.UserID,
 		&i.Amount,
 		&i.Type,
-		&i.Description,
 		&i.CategoryID,
+		&i.Description,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.DeletedAt,
@@ -89,7 +89,7 @@ func (q *Queries) GetTransaction(ctx context.Context, id uuid.UUID) (Transaction
 }
 
 const getTransactionByType = `-- name: GetTransactionByType :many
-SELECT id, user_id, amount, type, description, category_id, created_at, updated_at, deleted_at
+SELECT id, user_id, amount, type, category_id, description, created_at, updated_at, deleted_at
 FROM "transaction"
 WHERE type = $1 AND user_id = $2
 `
@@ -113,8 +113,8 @@ func (q *Queries) GetTransactionByType(ctx context.Context, arg GetTransactionBy
 			&i.UserID,
 			&i.Amount,
 			&i.Type,
-			&i.Description,
 			&i.CategoryID,
+			&i.Description,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.DeletedAt,
@@ -130,7 +130,7 @@ func (q *Queries) GetTransactionByType(ctx context.Context, arg GetTransactionBy
 }
 
 const getTransactionByuserId = `-- name: GetTransactionByuserId :many
-SELECT id, user_id, amount, type, description, category_id, created_at, updated_at, deleted_at
+SELECT id, user_id, amount, type, category_id, description, created_at, updated_at, deleted_at
 FROM "transaction"
 WHERE user_id = $1
 `
@@ -149,8 +149,8 @@ func (q *Queries) GetTransactionByuserId(ctx context.Context, userID uuid.UUID) 
 			&i.UserID,
 			&i.Amount,
 			&i.Type,
-			&i.Description,
 			&i.CategoryID,
+			&i.Description,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.DeletedAt,
@@ -174,7 +174,7 @@ SET
     category_id = COALESCE($4, category_id)
 WHERE
     user_id = $5
-RETURNING id, user_id, amount, type, description, category_id, created_at, updated_at, deleted_at
+RETURNING id, user_id, amount, type, category_id, description, created_at, updated_at, deleted_at
 `
 
 type UpdateTransactionParams struct {
@@ -199,8 +199,8 @@ func (q *Queries) UpdateTransaction(ctx context.Context, arg UpdateTransactionPa
 		&i.UserID,
 		&i.Amount,
 		&i.Type,
-		&i.Description,
 		&i.CategoryID,
+		&i.Description,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.DeletedAt,
