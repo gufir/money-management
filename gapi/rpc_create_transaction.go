@@ -17,21 +17,29 @@ func (server *Server) CreateTransaction(ctx context.Context, req *pb.CreateTrans
 		return nil, unauthorizedError(err)
 	}
 
-	parseUUID, err := uuid.Parse(req.GetUserId())
+	userID, err := uuid.Parse(req.GetUserId())
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid user id: %v", err)
 	}
 
-	if authPayload.UserID != parseUUID {
+	if authPayload.UserID != userID {
 		return nil, status.Errorf(codes.PermissionDenied, "can't create transaction for another user")
+	}
+
+	if !validateTransactionType(req.GetType()) {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid transaction type: %v", req.Type)
 	}
 
 	arg := db.CreateTransactionParams{
 		ID:          uuid.New(),
-		UserID:      parseUUID,
+		UserID:      userID,
 		Amount:      req.Amount,
 		Type:        req.Type,
 		Description: req.Description,
+	}
+
+	if req.GetCategoryId() != "" {
+		arg.CategoryID = uuid.MustParse(req.GetCategoryId())
 	}
 
 	transaction, err := server.store.CreateTransaction(ctx, arg)
@@ -43,13 +51,15 @@ func (server *Server) CreateTransaction(ctx context.Context, req *pb.CreateTrans
 		Transaction: ConvertTransaction(transaction),
 	}
 
-	// transaction := &pb.Transaction{
-	// 	Amount:     req.Amount,
-	// 	Type:       req.Type,
-	// 	Descrition: req.Description,
-	// 	CreatedAt:  timestamppb.New(time.Now()),
-	// 	UpdatedAt:  timestamppb.New(time.Now()),
-	// }
-
 	return rsp, nil
+}
+
+func validateTransactionType(transactionType string) bool {
+	validTypes := []string{"income", "expense"}
+	for _, t := range validTypes {
+		if t == transactionType {
+			return true
+		}
+	}
+	return false
 }

@@ -33,8 +33,8 @@ CREATE TABLE transaction (
   "user_id" uuid NOT NULL,
   "amount" bigint NOT NULL,
   "type" transaction_type NOT NULL,
-  "description" varchar NOT NULL,
   "category_id" uuid NOT NULL,
+  "description" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT(now()),
   "updated_at" timestamptz NOT NULL DEFAULT(now()),
   "deleted_at" timestamptz DEFAULT null
@@ -43,8 +43,7 @@ CREATE TABLE transaction (
 -- Create the "categories" table
 CREATE TABLE categories (
   "id" uuid PRIMARY KEY,
-  "name" varchar NOT NULL,
-  "type" category_type NOT NULL
+  "name" varchar NOT NULL
 );
 
 -- Create the "reports" table

@@ -2,11 +2,13 @@
 
 INSERT INTO categories (
     id,
-    name,
-    type
+    name
 ) VALUES (
     $1,
-    $2,
-    $3
+    $2
 )
 RETURNING *;
+
+-- name: GetCategories :many
+SELECT *
+FROM categories;

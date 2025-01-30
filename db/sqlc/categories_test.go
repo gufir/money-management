@@ -13,14 +13,12 @@ func CreateRandomCategories(t *testing.T) Category {
 	arg := CreateCategoriesParams{
 		ID:   uuid.New(),
 		Name: utils.RandomString(6),
-		Type: utils.Expense,
 	}
 
 	categories, err := testQueries.CreateCategories(context.Background(), arg)
 	require.NoError(t, err)
 	require.Equal(t, arg.ID, categories.ID)
 	require.Equal(t, arg.Name, categories.Name)
-	require.Equal(t, arg.Type, categories.Type)
 
 	return categories
 }

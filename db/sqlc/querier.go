@@ -12,14 +12,15 @@ import (
 
 type Querier interface {
 	CreateCategories(ctx context.Context, arg CreateCategoriesParams) (Category, error)
+	CreateMonthlyReport(ctx context.Context, userID uuid.UUID) error
 	CreateReportUser(ctx context.Context, arg CreateReportUserParams) error
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateTransaction(ctx context.Context, arg CreateTransactionParams) (Transaction, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
-	GetDetailsReportbyUser(ctx context.Context, userID uuid.UUID) ([]GetDetailsReportbyUserRow, error)
-	GetReportbyCategory(ctx context.Context) ([]GetReportbyCategoryRow, error)
-	GetReportbyDate(ctx context.Context, arg GetReportbyDateParams) ([]GetReportbyDateRow, error)
-	GetReportbyUser(ctx context.Context, userID uuid.UUID) (GetReportbyUserRow, error)
+	GetDetailsReportByUser(ctx context.Context, userID uuid.UUID) ([]GetDetailsReportByUserRow, error)
+	GetReportByCategory(ctx context.Context) ([]GetReportByCategoryRow, error)
+	GetReportByDate(ctx context.Context, arg GetReportByDateParams) ([]GetReportByDateRow, error)
+	GetReportByUser(ctx context.Context, userID uuid.UUID) (GetReportByUserRow, error)
 	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 	GetTransaction(ctx context.Context, id uuid.UUID) (Transaction, error)
 	GetTransactionByType(ctx context.Context, arg GetTransactionByTypeParams) ([]Transaction, error)

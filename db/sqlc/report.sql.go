@@ -12,6 +12,31 @@ import (
 	"github.com/google/uuid"
 )
 
+const createMonthlyReport = `-- name: CreateMonthlyReport :exec
+INSERT INTO reports (
+  id,
+  user_id,
+  period,
+  total_income,
+  total_expense
+)
+SELECT
+  uuid_generate_v4(),  -- New ID generated for the report
+  t.user_id,
+  'Monthly',
+  SUM(CASE WHEN t.type = 'income' THEN t.amount ELSE 0 END),
+  SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END)
+FROM transaction t
+WHERE t.user_id = $1
+AND t.created_at BETWEEN DATE_TRUNC('month', NOW()) AND NOW()
+GROUP BY t.user_id
+`
+
+func (q *Queries) CreateMonthlyReport(ctx context.Context, userID uuid.UUID) error {
+	_, err := q.db.Exec(ctx, createMonthlyReport, userID)
+	return err
+}
+
 const createReportUser = `-- name: CreateReportUser :exec
 INSERT INTO reports (
   id,
@@ -42,38 +67,33 @@ func (q *Queries) CreateReportUser(ctx context.Context, arg CreateReportUserPara
 	return err
 }
 
-const getDetailsReportbyUser = `-- name: GetDetailsReportbyUser :many
-SELECT t.id, t.user_id, t.category_id, c.name AS category_name, t.amount, t.description, t.created_at
+const getDetailsReportByUser = `-- name: GetDetailsReportByUser :many
+SELECT t.id, t.user_id, t.amount, t.description, t.created_at
 FROM transaction t
-JOIN categories c ON t.category_id = c.id
 WHERE t.user_id = $1
 ORDER BY t.created_at DESC
 `
 
-type GetDetailsReportbyUserRow struct {
-	ID           uuid.UUID `json:"id"`
-	UserID       uuid.UUID `json:"user_id"`
-	CategoryID   uuid.UUID `json:"category_id"`
-	CategoryName string    `json:"category_name"`
-	Amount       int64     `json:"amount"`
-	Description  string    `json:"description"`
-	CreatedAt    time.Time `json:"created_at"`
+type GetDetailsReportByUserRow struct {
+	ID          uuid.UUID `json:"id"`
+	UserID      uuid.UUID `json:"user_id"`
+	Amount      int64     `json:"amount"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
-func (q *Queries) GetDetailsReportbyUser(ctx context.Context, userID uuid.UUID) ([]GetDetailsReportbyUserRow, error) {
-	rows, err := q.db.Query(ctx, getDetailsReportbyUser, userID)
+func (q *Queries) GetDetailsReportByUser(ctx context.Context, userID uuid.UUID) ([]GetDetailsReportByUserRow, error) {
+	rows, err := q.db.Query(ctx, getDetailsReportByUser, userID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []GetDetailsReportbyUserRow{}
+	items := []GetDetailsReportByUserRow{}
 	for rows.Next() {
-		var i GetDetailsReportbyUserRow
+		var i GetDetailsReportByUserRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
-			&i.CategoryID,
-			&i.CategoryName,
 			&i.Amount,
 			&i.Description,
 			&i.CreatedAt,
@@ -88,31 +108,30 @@ func (q *Queries) GetDetailsReportbyUser(ctx context.Context, userID uuid.UUID) 
 	return items, nil
 }
 
-const getReportbyCategory = `-- name: GetReportbyCategory :many
-SELECT c.name AS category_name,
+const getReportByCategory = `-- name: GetReportByCategory :many
+SELECT t.category_id,
        SUM(CASE WHEN t.type = 'income' THEN t.amount ELSE 0 END) AS total_income,
        SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END) AS total_expense
 FROM transaction t
-JOIN categories c ON t.category_id = c.id
-GROUP BY c.name
+GROUP BY t.category_id
 `
 
-type GetReportbyCategoryRow struct {
-	CategoryName string `json:"category_name"`
-	TotalIncome  int64  `json:"total_income"`
-	TotalExpense int64  `json:"total_expense"`
+type GetReportByCategoryRow struct {
+	CategoryID   uuid.UUID `json:"category_id"`
+	TotalIncome  int64     `json:"total_income"`
+	TotalExpense int64     `json:"total_expense"`
 }
 
-func (q *Queries) GetReportbyCategory(ctx context.Context) ([]GetReportbyCategoryRow, error) {
-	rows, err := q.db.Query(ctx, getReportbyCategory)
+func (q *Queries) GetReportByCategory(ctx context.Context) ([]GetReportByCategoryRow, error) {
+	rows, err := q.db.Query(ctx, getReportByCategory)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []GetReportbyCategoryRow{}
+	items := []GetReportByCategoryRow{}
 	for rows.Next() {
-		var i GetReportbyCategoryRow
-		if err := rows.Scan(&i.CategoryName, &i.TotalIncome, &i.TotalExpense); err != nil {
+		var i GetReportByCategoryRow
+		if err := rows.Scan(&i.CategoryID, &i.TotalIncome, &i.TotalExpense); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -123,46 +142,41 @@ func (q *Queries) GetReportbyCategory(ctx context.Context) ([]GetReportbyCategor
 	return items, nil
 }
 
-const getReportbyDate = `-- name: GetReportbyDate :many
-SELECT t.id, t.user_id, t.category_id, c.name AS category_name, t.amount, t.type, t.description, t.created_at
+const getReportByDate = `-- name: GetReportByDate :many
+SELECT t.id, t.user_id, t.amount, t.type, t.description, t.created_at
 FROM transaction t
-JOIN categories c ON t.category_id = c.id
 WHERE t.user_id = $1
 AND t.created_at BETWEEN $2 AND $3
 ORDER BY t.created_at DESC
 `
 
-type GetReportbyDateParams struct {
+type GetReportByDateParams struct {
 	UserID      uuid.UUID `json:"user_id"`
 	CreatedAt   time.Time `json:"created_at"`
 	CreatedAt_2 time.Time `json:"created_at_2"`
 }
 
-type GetReportbyDateRow struct {
-	ID           uuid.UUID `json:"id"`
-	UserID       uuid.UUID `json:"user_id"`
-	CategoryID   uuid.UUID `json:"category_id"`
-	CategoryName string    `json:"category_name"`
-	Amount       int64     `json:"amount"`
-	Type         string    `json:"type"`
-	Description  string    `json:"description"`
-	CreatedAt    time.Time `json:"created_at"`
+type GetReportByDateRow struct {
+	ID          uuid.UUID `json:"id"`
+	UserID      uuid.UUID `json:"user_id"`
+	Amount      int64     `json:"amount"`
+	Type        string    `json:"type"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
-func (q *Queries) GetReportbyDate(ctx context.Context, arg GetReportbyDateParams) ([]GetReportbyDateRow, error) {
-	rows, err := q.db.Query(ctx, getReportbyDate, arg.UserID, arg.CreatedAt, arg.CreatedAt_2)
+func (q *Queries) GetReportByDate(ctx context.Context, arg GetReportByDateParams) ([]GetReportByDateRow, error) {
+	rows, err := q.db.Query(ctx, getReportByDate, arg.UserID, arg.CreatedAt, arg.CreatedAt_2)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []GetReportbyDateRow{}
+	items := []GetReportByDateRow{}
 	for rows.Next() {
-		var i GetReportbyDateRow
+		var i GetReportByDateRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
-			&i.CategoryID,
-			&i.CategoryName,
 			&i.Amount,
 			&i.Type,
 			&i.Description,
@@ -178,7 +192,7 @@ func (q *Queries) GetReportbyDate(ctx context.Context, arg GetReportbyDateParams
 	return items, nil
 }
 
-const getReportbyUser = `-- name: GetReportbyUser :one
+const getReportByUser = `-- name: GetReportByUser :one
 SELECT user_id, 
        SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) AS total_income,
        SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) AS total_expense
@@ -187,15 +201,15 @@ WHERE user_id = $1
 GROUP BY user_id
 `
 
-type GetReportbyUserRow struct {
+type GetReportByUserRow struct {
 	UserID       uuid.UUID `json:"user_id"`
 	TotalIncome  int64     `json:"total_income"`
 	TotalExpense int64     `json:"total_expense"`
 }
 
-func (q *Queries) GetReportbyUser(ctx context.Context, userID uuid.UUID) (GetReportbyUserRow, error) {
-	row := q.db.QueryRow(ctx, getReportbyUser, userID)
-	var i GetReportbyUserRow
+func (q *Queries) GetReportByUser(ctx context.Context, userID uuid.UUID) (GetReportByUserRow, error) {
+	row := q.db.QueryRow(ctx, getReportByUser, userID)
+	var i GetReportByUserRow
 	err := row.Scan(&i.UserID, &i.TotalIncome, &i.TotalExpense)
 	return i, err
 }

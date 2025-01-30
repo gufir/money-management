@@ -51,6 +51,20 @@ func (mr *MockStoreMockRecorder) CreateCategories(arg0, arg1 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCategories", reflect.TypeOf((*MockStore)(nil).CreateCategories), arg0, arg1)
 }
 
+// CreateMonthlyReport mocks base method.
+func (m *MockStore) CreateMonthlyReport(arg0 context.Context, arg1 uuid.UUID) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateMonthlyReport", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateMonthlyReport indicates an expected call of CreateMonthlyReport.
+func (mr *MockStoreMockRecorder) CreateMonthlyReport(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateMonthlyReport", reflect.TypeOf((*MockStore)(nil).CreateMonthlyReport), arg0, arg1)
+}
+
 // CreateReportUser mocks base method.
 func (m *MockStore) CreateReportUser(arg0 context.Context, arg1 db.CreateReportUserParams) error {
 	m.ctrl.T.Helper()
@@ -125,64 +139,64 @@ func (mr *MockStoreMockRecorder) CreateUserTx(arg0, arg1 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUserTx", reflect.TypeOf((*MockStore)(nil).CreateUserTx), arg0, arg1)
 }
 
-// GetDetailsReportbyUser mocks base method.
-func (m *MockStore) GetDetailsReportbyUser(arg0 context.Context, arg1 uuid.UUID) ([]db.GetDetailsReportbyUserRow, error) {
+// GetDetailsReportByUser mocks base method.
+func (m *MockStore) GetDetailsReportByUser(arg0 context.Context, arg1 uuid.UUID) ([]db.GetDetailsReportByUserRow, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDetailsReportbyUser", arg0, arg1)
-	ret0, _ := ret[0].([]db.GetDetailsReportbyUserRow)
+	ret := m.ctrl.Call(m, "GetDetailsReportByUser", arg0, arg1)
+	ret0, _ := ret[0].([]db.GetDetailsReportByUserRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetDetailsReportbyUser indicates an expected call of GetDetailsReportbyUser.
-func (mr *MockStoreMockRecorder) GetDetailsReportbyUser(arg0, arg1 interface{}) *gomock.Call {
+// GetDetailsReportByUser indicates an expected call of GetDetailsReportByUser.
+func (mr *MockStoreMockRecorder) GetDetailsReportByUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDetailsReportbyUser", reflect.TypeOf((*MockStore)(nil).GetDetailsReportbyUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDetailsReportByUser", reflect.TypeOf((*MockStore)(nil).GetDetailsReportByUser), arg0, arg1)
 }
 
-// GetReportbyCategory mocks base method.
-func (m *MockStore) GetReportbyCategory(arg0 context.Context) ([]db.GetReportbyCategoryRow, error) {
+// GetReportByCategory mocks base method.
+func (m *MockStore) GetReportByCategory(arg0 context.Context) ([]db.GetReportByCategoryRow, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetReportbyCategory", arg0)
-	ret0, _ := ret[0].([]db.GetReportbyCategoryRow)
+	ret := m.ctrl.Call(m, "GetReportByCategory", arg0)
+	ret0, _ := ret[0].([]db.GetReportByCategoryRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetReportbyCategory indicates an expected call of GetReportbyCategory.
-func (mr *MockStoreMockRecorder) GetReportbyCategory(arg0 interface{}) *gomock.Call {
+// GetReportByCategory indicates an expected call of GetReportByCategory.
+func (mr *MockStoreMockRecorder) GetReportByCategory(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReportbyCategory", reflect.TypeOf((*MockStore)(nil).GetReportbyCategory), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReportByCategory", reflect.TypeOf((*MockStore)(nil).GetReportByCategory), arg0)
 }
 
-// GetReportbyDate mocks base method.
-func (m *MockStore) GetReportbyDate(arg0 context.Context, arg1 db.GetReportbyDateParams) ([]db.GetReportbyDateRow, error) {
+// GetReportByDate mocks base method.
+func (m *MockStore) GetReportByDate(arg0 context.Context, arg1 db.GetReportByDateParams) ([]db.GetReportByDateRow, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetReportbyDate", arg0, arg1)
-	ret0, _ := ret[0].([]db.GetReportbyDateRow)
+	ret := m.ctrl.Call(m, "GetReportByDate", arg0, arg1)
+	ret0, _ := ret[0].([]db.GetReportByDateRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetReportbyDate indicates an expected call of GetReportbyDate.
-func (mr *MockStoreMockRecorder) GetReportbyDate(arg0, arg1 interface{}) *gomock.Call {
+// GetReportByDate indicates an expected call of GetReportByDate.
+func (mr *MockStoreMockRecorder) GetReportByDate(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReportbyDate", reflect.TypeOf((*MockStore)(nil).GetReportbyDate), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReportByDate", reflect.TypeOf((*MockStore)(nil).GetReportByDate), arg0, arg1)
 }
 
-// GetReportbyUser mocks base method.
-func (m *MockStore) GetReportbyUser(arg0 context.Context, arg1 uuid.UUID) (db.GetReportbyUserRow, error) {
+// GetReportByUser mocks base method.
+func (m *MockStore) GetReportByUser(arg0 context.Context, arg1 uuid.UUID) (db.GetReportByUserRow, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetReportbyUser", arg0, arg1)
-	ret0, _ := ret[0].(db.GetReportbyUserRow)
+	ret := m.ctrl.Call(m, "GetReportByUser", arg0, arg1)
+	ret0, _ := ret[0].(db.GetReportByUserRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetReportbyUser indicates an expected call of GetReportbyUser.
-func (mr *MockStoreMockRecorder) GetReportbyUser(arg0, arg1 interface{}) *gomock.Call {
+// GetReportByUser indicates an expected call of GetReportByUser.
+func (mr *MockStoreMockRecorder) GetReportByUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReportbyUser", reflect.TypeOf((*MockStore)(nil).GetReportbyUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReportByUser", reflect.TypeOf((*MockStore)(nil).GetReportByUser), arg0, arg1)
 }
 
 // GetSession mocks base method.
