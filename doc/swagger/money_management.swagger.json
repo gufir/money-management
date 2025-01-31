@@ -319,6 +319,9 @@
     "pbUpdateTransactionRequest": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
         "amount": {
           "type": "string",
           "format": "int64"

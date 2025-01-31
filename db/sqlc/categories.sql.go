@@ -34,3 +34,28 @@ func (q *Queries) CreateCategories(ctx context.Context, arg CreateCategoriesPara
 	err := row.Scan(&i.ID, &i.Name)
 	return i, err
 }
+
+const getCategories = `-- name: GetCategories :many
+SELECT id, name
+FROM categories
+`
+
+func (q *Queries) GetCategories(ctx context.Context) ([]Category, error) {
+	rows, err := q.db.Query(ctx, getCategories)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Category{}
+	for rows.Next() {
+		var i Category
+		if err := rows.Scan(&i.ID, &i.Name); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
