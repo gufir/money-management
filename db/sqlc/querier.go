@@ -17,7 +17,9 @@ type Querier interface {
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateTransaction(ctx context.Context, arg CreateTransactionParams) (Transaction, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
-	GetCategories(ctx context.Context) ([]Category, error)
+	GetAllCategories(ctx context.Context) ([]Category, error)
+	GetCategoryById(ctx context.Context, id uuid.UUID) (Category, error)
+	GetCategoryByName(ctx context.Context, name string) (Category, error)
 	GetDetailsReportByUser(ctx context.Context, userID uuid.UUID) ([]GetDetailsReportByUserRow, error)
 	GetReportByCategory(ctx context.Context) ([]GetReportByCategoryRow, error)
 	GetReportByDate(ctx context.Context, arg GetReportByDateParams) ([]GetReportByDateRow, error)
@@ -29,6 +31,7 @@ type Querier interface {
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserById(ctx context.Context, id int64) (User, error)
 	GetUserByUsername(ctx context.Context, username string) (User, error)
+	UpdateCategories(ctx context.Context, arg UpdateCategoriesParams) (Category, error)
 	UpdateTransaction(ctx context.Context, arg UpdateTransactionParams) (Transaction, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
 }

@@ -1,0 +1,17 @@
+syntax="proto3";
+
+package pb;
+
+option go_package = "github.com/gufir/money-management/pb";
+
+import "categories.proto";
+
+
+message UpdateCategoriesRequest {
+    string id = 1;
+    string name = 2;
+}
+
+message UpdateCategoriesResponse {
+    Category category = 1;
+}

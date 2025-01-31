@@ -9,6 +9,9 @@ import "rpc_update_user.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "rpc_create_transaction.proto";
 import "rpc_update_transaction.proto";
+import "rpc_create_categories.proto";
+import "rpc_update_categories.proto";
+import "rpc_get_categories.proto";
 
 
 option go_package = "github.com/gufir/money-management/pb";
@@ -16,7 +19,7 @@ option go_package = "github.com/gufir/money-management/pb";
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     info: {
       title: "Money Management API"
-      version: "1.1"
+      version: "1.2"
       contact: {
         name: "gufir"
         url: "https://github.com/gufir"
@@ -84,6 +87,41 @@ service MoneyManagement {
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to update transaction."
             summary: "Update transaction"
+        };
+    }
+
+    rpc CreateCategories (CreateCategoriesRequest) returns (CreateCategoriesResponse){
+        option (google.api.http) = {
+            post: "/v1/create_categories"
+            body: "*"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to create a new category."
+            summary: "Create a new category"
+        };
+    }
+
+    rpc UpdateCategories (UpdateCategoriesRequest) returns (UpdateCategoriesResponse){
+        option (google.api.http) = {
+            post: "/v1/update_categories"
+            body: "*"
+        };
+        
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to update category."
+            summary: "Update category"
+        };
+    }
+
+    rpc GetCategories (GetCategoriesRequest) returns (GetCategoriesResponse){
+        option (google.api.http) = {
+            get: "/v1/get_categories"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to get all categories."
+            summary: "Get all categories"
         };
     }
 }

@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createCategories = `-- name: CreateCategories :one
@@ -35,13 +36,14 @@ func (q *Queries) CreateCategories(ctx context.Context, arg CreateCategoriesPara
 	return i, err
 }
 
-const getCategories = `-- name: GetCategories :many
+const getAllCategories = `-- name: GetAllCategories :many
 SELECT id, name
 FROM categories
+ORDER BY name
 `
 
-func (q *Queries) GetCategories(ctx context.Context) ([]Category, error) {
-	rows, err := q.db.Query(ctx, getCategories)
+func (q *Queries) GetAllCategories(ctx context.Context) ([]Category, error) {
+	rows, err := q.db.Query(ctx, getAllCategories)
 	if err != nil {
 		return nil, err
 	}
@@ -58,4 +60,50 @@ func (q *Queries) GetCategories(ctx context.Context) ([]Category, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const getCategoryById = `-- name: GetCategoryById :one
+SELECT id, name FROM categories
+WHERE id = $1
+`
+
+func (q *Queries) GetCategoryById(ctx context.Context, id uuid.UUID) (Category, error) {
+	row := q.db.QueryRow(ctx, getCategoryById, id)
+	var i Category
+	err := row.Scan(&i.ID, &i.Name)
+	return i, err
+}
+
+const getCategoryByName = `-- name: GetCategoryByName :one
+SELECT id, name FROM categories 
+WHERE name = $1 
+LIMIT 1
+`
+
+func (q *Queries) GetCategoryByName(ctx context.Context, name string) (Category, error) {
+	row := q.db.QueryRow(ctx, getCategoryByName, name)
+	var i Category
+	err := row.Scan(&i.ID, &i.Name)
+	return i, err
+}
+
+const updateCategories = `-- name: UpdateCategories :one
+UPDATE categories
+SET
+    name = COALESCE($1, name)
+WHERE 
+    id = $2
+RETURNING id, name
+`
+
+type UpdateCategoriesParams struct {
+	Name pgtype.Text `json:"name"`
+	ID   uuid.UUID   `json:"id"`
+}
+
+func (q *Queries) UpdateCategories(ctx context.Context, arg UpdateCategoriesParams) (Category, error) {
+	row := q.db.QueryRow(ctx, updateCategories, arg.Name, arg.ID)
+	var i Category
+	err := row.Scan(&i.ID, &i.Name)
+	return i, err
 }
