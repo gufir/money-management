@@ -38,7 +38,7 @@ SET
     amount = COALESCE(sqlc.narg(amount), amount),
     type = COALESCE(sqlc.narg(type), type),
     description = COALESCE(sqlc.narg(description), description),
-    category_id = COALESCE(sqlc.narg(category_id), category_id)
+    category_id = COALESCE(sqlc.arg(category_id), category_id)
 WHERE
-    user_id = sqlc.arg(user_id)
+    user_id = sqlc.arg(user_id) AND id = sqlc.arg(id)
 RETURNING *;

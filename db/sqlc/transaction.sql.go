@@ -173,7 +173,7 @@ SET
     description = COALESCE($3, description),
     category_id = COALESCE($4, category_id)
 WHERE
-    user_id = $5
+    user_id = $5 AND id = $6
 RETURNING id, user_id, amount, type, category_id, description, created_at, updated_at, deleted_at
 `
 
@@ -181,8 +181,9 @@ type UpdateTransactionParams struct {
 	Amount      pgtype.Int8 `json:"amount"`
 	Type        interface{} `json:"type"`
 	Description pgtype.Text `json:"description"`
-	CategoryID  pgtype.UUID `json:"category_id"`
+	CategoryID  uuid.UUID   `json:"category_id"`
 	UserID      uuid.UUID   `json:"user_id"`
+	ID          uuid.UUID   `json:"id"`
 }
 
 func (q *Queries) UpdateTransaction(ctx context.Context, arg UpdateTransactionParams) (Transaction, error) {
@@ -192,6 +193,7 @@ func (q *Queries) UpdateTransaction(ctx context.Context, arg UpdateTransactionPa
 		arg.Description,
 		arg.CategoryID,
 		arg.UserID,
+		arg.ID,
 	)
 	var i Transaction
 	err := row.Scan(

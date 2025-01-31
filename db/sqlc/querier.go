@@ -17,6 +17,7 @@ type Querier interface {
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateTransaction(ctx context.Context, arg CreateTransactionParams) (Transaction, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	GetCategories(ctx context.Context) ([]Category, error)
 	GetDetailsReportByUser(ctx context.Context, userID uuid.UUID) ([]GetDetailsReportByUserRow, error)
 	GetReportByCategory(ctx context.Context) ([]GetReportByCategoryRow, error)
 	GetReportByDate(ctx context.Context, arg GetReportByDateParams) ([]GetReportByDateRow, error)

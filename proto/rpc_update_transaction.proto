@@ -7,11 +7,12 @@ import "transaction.proto";
 option go_package = "github.com/gufir/money-management/pb";
 
 message UpdateTransactionRequest {
-    optional int64 amount = 1;
-    optional string description = 2;
-    optional string type = 3;
-    optional string category_id = 4;
-    string user_id = 5;
+    string id = 1;
+    optional int64 amount = 2;
+    optional string description = 3;
+    optional string type = 4;
+    optional string category_id = 5;
+    string user_id = 6;
 }
 
 message UpdateTransactionResponse {
