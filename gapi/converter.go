@@ -26,3 +26,10 @@ func ConvertTransaction(transaction db.Transaction) *pb.Transaction {
 		UserId:      transaction.UserID.String(),
 	}
 }
+
+func ConvertCategory(category db.Category) *pb.Category {
+	return &pb.Category{
+		Id:   category.ID.String(),
+		Name: category.Name,
+	}
+}

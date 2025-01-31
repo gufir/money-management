@@ -2,6 +2,7 @@ syntax = "proto3";
 package pb;
 
 import "transaction.proto";
+import "categories.proto";
 
 option go_package = "github.com/gufir/money-management/pb";
 
@@ -11,8 +12,10 @@ message CreateTransactionRequest {
     string type = 3;
     string user_id = 4;
     string category_id = 5;
+    string category_name = 6;
 }
 
 message CreateTransactionResponse {
     Transaction transaction = 1;
+    Category category = 2;
 }

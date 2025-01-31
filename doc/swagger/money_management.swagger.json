@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Money Management API",
-    "version": "1.1",
+    "version": "1.2",
     "contact": {
       "name": "gufir",
       "url": "https://github.com/gufir",
@@ -21,6 +21,40 @@
     "application/json"
   ],
   "paths": {
+    "/v1/create_categories": {
+      "post": {
+        "summary": "Create a new category",
+        "description": "Use this API to create a new category.",
+        "operationId": "MoneyManagement_CreateCategories",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateCategoriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreateCategoriesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
     "/v1/create_transaction": {
       "post": {
         "summary": "Create a new transaction",
@@ -89,6 +123,30 @@
         ]
       }
     },
+    "/v1/get_categories": {
+      "get": {
+        "summary": "Get all categories",
+        "description": "Use this API to get all categories.",
+        "operationId": "MoneyManagement_GetCategories",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetCategoriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
     "/v1/login_user": {
       "post": {
         "summary": "Login user",
@@ -115,6 +173,40 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/pbLoginUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
+    "/v1/update_categories": {
+      "post": {
+        "summary": "Update category",
+        "description": "Use this API to update category.",
+        "operationId": "MoneyManagement_UpdateCategories",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateCategoriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdateCategoriesRequest"
             }
           }
         ],
@@ -193,6 +285,33 @@
     }
   },
   "definitions": {
+    "pbCategory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "pbCreateCategoriesRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "pbCreateCategoriesResponse": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "$ref": "#/definitions/pbCategory"
+        }
+      }
+    },
     "pbCreateTransactionRequest": {
       "type": "object",
       "properties": {
@@ -211,6 +330,9 @@
         },
         "categoryId": {
           "type": "string"
+        },
+        "categoryName": {
+          "type": "string"
         }
       }
     },
@@ -219,6 +341,9 @@
       "properties": {
         "transaction": {
           "$ref": "#/definitions/pbTransaction"
+        },
+        "category": {
+          "$ref": "#/definitions/pbCategory"
         }
       }
     },
@@ -245,6 +370,18 @@
       "properties": {
         "user": {
           "$ref": "#/definitions/pbUser"
+        }
+      }
+    },
+    "pbGetCategoriesResponse": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbCategory"
+          }
         }
       }
     },
@@ -313,6 +450,25 @@
         },
         "userId": {
           "type": "string"
+        }
+      }
+    },
+    "pbUpdateCategoriesRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "pbUpdateCategoriesResponse": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "$ref": "#/definitions/pbCategory"
         }
       }
     },

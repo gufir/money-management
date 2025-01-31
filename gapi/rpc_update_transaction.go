@@ -37,6 +37,15 @@ func (server *Server) UpdateTransaction(ctx context.Context, req *pb.UpdateTrans
 		return nil, status.Errorf(codes.InvalidArgument, "invalid transaction id: %v", err)
 	}
 
+	transaction, err := server.store.GetTransaction(ctx, TransactionID)
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "transaction not found: %v", err)
+	}
+
+	if transaction.UserID != userID {
+		return nil, status.Errorf(codes.PermissionDenied, "transaction does not belong to user")
+	}
+
 	arg := db.UpdateTransactionParams{
 		ID:     TransactionID,
 		UserID: userID,
@@ -55,13 +64,13 @@ func (server *Server) UpdateTransaction(ctx context.Context, req *pb.UpdateTrans
 		arg.CategoryID = uuid.MustParse(req.GetCategoryId())
 	}
 
-	transaction, err := server.store.UpdateTransaction(ctx, arg)
+	updateTransaction, err := server.store.UpdateTransaction(ctx, arg)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to update transaction: %v", err)
 	}
 
 	rsp := &pb.UpdateTransactionResponse{
-		Transaction: ConvertTransaction(transaction),
+		Transaction: ConvertTransaction(updateTransaction),
 	}
 
 	return rsp, nil

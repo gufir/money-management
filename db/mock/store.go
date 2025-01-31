@@ -139,19 +139,49 @@ func (mr *MockStoreMockRecorder) CreateUserTx(arg0, arg1 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUserTx", reflect.TypeOf((*MockStore)(nil).CreateUserTx), arg0, arg1)
 }
 
-// GetCategories mocks base method.
-func (m *MockStore) GetCategories(arg0 context.Context) ([]db.Category, error) {
+// GetAllCategories mocks base method.
+func (m *MockStore) GetAllCategories(arg0 context.Context) ([]db.Category, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCategories", arg0)
+	ret := m.ctrl.Call(m, "GetAllCategories", arg0)
 	ret0, _ := ret[0].([]db.Category)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetCategories indicates an expected call of GetCategories.
-func (mr *MockStoreMockRecorder) GetCategories(arg0 interface{}) *gomock.Call {
+// GetAllCategories indicates an expected call of GetAllCategories.
+func (mr *MockStoreMockRecorder) GetAllCategories(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCategories", reflect.TypeOf((*MockStore)(nil).GetCategories), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllCategories", reflect.TypeOf((*MockStore)(nil).GetAllCategories), arg0)
+}
+
+// GetCategoryById mocks base method.
+func (m *MockStore) GetCategoryById(arg0 context.Context, arg1 uuid.UUID) (db.Category, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCategoryById", arg0, arg1)
+	ret0, _ := ret[0].(db.Category)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCategoryById indicates an expected call of GetCategoryById.
+func (mr *MockStoreMockRecorder) GetCategoryById(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCategoryById", reflect.TypeOf((*MockStore)(nil).GetCategoryById), arg0, arg1)
+}
+
+// GetCategoryByName mocks base method.
+func (m *MockStore) GetCategoryByName(arg0 context.Context, arg1 string) (db.Category, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCategoryByName", arg0, arg1)
+	ret0, _ := ret[0].(db.Category)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCategoryByName indicates an expected call of GetCategoryByName.
+func (mr *MockStoreMockRecorder) GetCategoryByName(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCategoryByName", reflect.TypeOf((*MockStore)(nil).GetCategoryByName), arg0, arg1)
 }
 
 // GetDetailsReportByUser mocks base method.
@@ -317,6 +347,21 @@ func (m *MockStore) GetUserByUsername(arg0 context.Context, arg1 string) (db.Use
 func (mr *MockStoreMockRecorder) GetUserByUsername(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByUsername", reflect.TypeOf((*MockStore)(nil).GetUserByUsername), arg0, arg1)
+}
+
+// UpdateCategories mocks base method.
+func (m *MockStore) UpdateCategories(arg0 context.Context, arg1 db.UpdateCategoriesParams) (db.Category, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateCategories", arg0, arg1)
+	ret0, _ := ret[0].(db.Category)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateCategories indicates an expected call of UpdateCategories.
+func (mr *MockStoreMockRecorder) UpdateCategories(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCategories", reflect.TypeOf((*MockStore)(nil).UpdateCategories), arg0, arg1)
 }
 
 // UpdateTransaction mocks base method.

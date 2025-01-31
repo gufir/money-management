@@ -23,6 +23,9 @@ type MoneyManagementClient interface {
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
 	CreateTransaction(ctx context.Context, in *CreateTransactionRequest, opts ...grpc.CallOption) (*CreateTransactionResponse, error)
 	UpdateTransaction(ctx context.Context, in *UpdateTransactionRequest, opts ...grpc.CallOption) (*UpdateTransactionResponse, error)
+	CreateCategories(ctx context.Context, in *CreateCategoriesRequest, opts ...grpc.CallOption) (*CreateCategoriesResponse, error)
+	UpdateCategories(ctx context.Context, in *UpdateCategoriesRequest, opts ...grpc.CallOption) (*UpdateCategoriesResponse, error)
+	GetCategories(ctx context.Context, in *GetCategoriesRequest, opts ...grpc.CallOption) (*GetCategoriesResponse, error)
 }
 
 type moneyManagementClient struct {
@@ -78,6 +81,33 @@ func (c *moneyManagementClient) UpdateTransaction(ctx context.Context, in *Updat
 	return out, nil
 }
 
+func (c *moneyManagementClient) CreateCategories(ctx context.Context, in *CreateCategoriesRequest, opts ...grpc.CallOption) (*CreateCategoriesResponse, error) {
+	out := new(CreateCategoriesResponse)
+	err := c.cc.Invoke(ctx, "/pb.MoneyManagement/CreateCategories", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *moneyManagementClient) UpdateCategories(ctx context.Context, in *UpdateCategoriesRequest, opts ...grpc.CallOption) (*UpdateCategoriesResponse, error) {
+	out := new(UpdateCategoriesResponse)
+	err := c.cc.Invoke(ctx, "/pb.MoneyManagement/UpdateCategories", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *moneyManagementClient) GetCategories(ctx context.Context, in *GetCategoriesRequest, opts ...grpc.CallOption) (*GetCategoriesResponse, error) {
+	out := new(GetCategoriesResponse)
+	err := c.cc.Invoke(ctx, "/pb.MoneyManagement/GetCategories", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MoneyManagementServer is the server API for MoneyManagement service.
 // All implementations must embed UnimplementedMoneyManagementServer
 // for forward compatibility
@@ -87,6 +117,9 @@ type MoneyManagementServer interface {
 	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
 	CreateTransaction(context.Context, *CreateTransactionRequest) (*CreateTransactionResponse, error)
 	UpdateTransaction(context.Context, *UpdateTransactionRequest) (*UpdateTransactionResponse, error)
+	CreateCategories(context.Context, *CreateCategoriesRequest) (*CreateCategoriesResponse, error)
+	UpdateCategories(context.Context, *UpdateCategoriesRequest) (*UpdateCategoriesResponse, error)
+	GetCategories(context.Context, *GetCategoriesRequest) (*GetCategoriesResponse, error)
 	mustEmbedUnimplementedMoneyManagementServer()
 }
 
@@ -108,6 +141,15 @@ func (UnimplementedMoneyManagementServer) CreateTransaction(context.Context, *Cr
 }
 func (UnimplementedMoneyManagementServer) UpdateTransaction(context.Context, *UpdateTransactionRequest) (*UpdateTransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTransaction not implemented")
+}
+func (UnimplementedMoneyManagementServer) CreateCategories(context.Context, *CreateCategoriesRequest) (*CreateCategoriesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCategories not implemented")
+}
+func (UnimplementedMoneyManagementServer) UpdateCategories(context.Context, *UpdateCategoriesRequest) (*UpdateCategoriesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCategories not implemented")
+}
+func (UnimplementedMoneyManagementServer) GetCategories(context.Context, *GetCategoriesRequest) (*GetCategoriesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCategories not implemented")
 }
 func (UnimplementedMoneyManagementServer) mustEmbedUnimplementedMoneyManagementServer() {}
 
@@ -212,6 +254,60 @@ func _MoneyManagement_UpdateTransaction_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MoneyManagement_CreateCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateCategoriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MoneyManagementServer).CreateCategories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.MoneyManagement/CreateCategories",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MoneyManagementServer).CreateCategories(ctx, req.(*CreateCategoriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MoneyManagement_UpdateCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCategoriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MoneyManagementServer).UpdateCategories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.MoneyManagement/UpdateCategories",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MoneyManagementServer).UpdateCategories(ctx, req.(*UpdateCategoriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MoneyManagement_GetCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCategoriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MoneyManagementServer).GetCategories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.MoneyManagement/GetCategories",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MoneyManagementServer).GetCategories(ctx, req.(*GetCategoriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MoneyManagement_ServiceDesc is the grpc.ServiceDesc for MoneyManagement service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -238,6 +334,18 @@ var MoneyManagement_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateTransaction",
 			Handler:    _MoneyManagement_UpdateTransaction_Handler,
+		},
+		{
+			MethodName: "CreateCategories",
+			Handler:    _MoneyManagement_CreateCategories_Handler,
+		},
+		{
+			MethodName: "UpdateCategories",
+			Handler:    _MoneyManagement_UpdateCategories_Handler,
+		},
+		{
+			MethodName: "GetCategories",
+			Handler:    _MoneyManagement_GetCategories_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
