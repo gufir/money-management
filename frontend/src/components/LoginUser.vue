@@ -8,6 +8,7 @@ import Button from 'primevue/button'
 import axios from 'axios'
 import { useToast } from 'primevue/usetoast'
 import router from '@/router'
+import store from '@/store'
 
 const username = ref<string>('')
 const password = ref<string>('')
@@ -31,12 +32,16 @@ const handlerLogin = async () => {
       },
     )
 
+    store.setUser(response.data.user, response.data.access_token, response.data.refresh_token)
+
     toast.add({
       severity: 'success',
       summary: `Hello ${response.data.user.username}`,
       detail: 'You have successfully logged in',
       life: 3000,
     })
+
+    router.push('/dashboard')
   } catch (error: any) {
     if (error.response && error.response.status === 404) {
       errorMessages.value = error.response.data.message
@@ -83,16 +88,16 @@ const handlerLogin = async () => {
           </FloatLabel>
         </InputGroup>
 
+        <div class="text-left">
+          <a href="#" class="text-sm forgot-password">Forgot Password?</a>
+        </div>
+
         <Button
           label="Login"
           class="w-full p-button-success hover-button"
           :disabled="isLoginDisabled"
           @click="handlerLogin"
         />
-
-        <div class="text-center">
-          <a href="#" class="text-sm forgot-password">Forgot Password?</a>
-        </div>
 
         <Button
           label="Create User"

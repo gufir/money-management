@@ -3,7 +3,7 @@ import LoginForm from '../components/LoginUser.vue'
 import Toast from 'primevue/toast'
 import UserInfo from '../components/UserInfo.vue'
 import store from '../store'
-import { User } from '../types/user'
+import type { User } from '../types/user'
 import { useToast } from 'primevue/usetoast'
 
 const toast = useToast()
