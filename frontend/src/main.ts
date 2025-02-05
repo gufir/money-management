@@ -1,14 +1,14 @@
-import { createApp } from "vue";
-import "./assets/main.css";
-import App from "./App.vue";
-import Primvue from "primevue/config";
-import router from "./router";
-import ToastService from "primevue/toastservice";
+import { createApp } from 'vue'
+import './assets/main.css'
+import App from './App.vue'
+import Primvue from 'primevue/config'
+import router from './router'
+import ToastService from 'primevue/toastservice'
 
-const app = createApp(App);
+const app = createApp(App)
 
-app.use(router);
-app.use(Primvue);
-app.use(ToastService);
+app.use(router)
+app.use(Primvue)
+app.use(ToastService)
 
-app.mount("#app");
+app.mount('#app')

@@ -17,11 +17,7 @@ import Button from 'primevue/button'
             Requested resource is not available.
           </div>
           <RouterLink to="/" custom v-slot="{ navigate }">
-            <Button
-              @click="navigate"
-              label="Go to Home"
-              class="w-full p-button-success hover-button"
-            />
+            <Button @click="navigate" label="Go to Home" class="p-button-success hover-button" />
           </RouterLink>
         </div>
       </div>
