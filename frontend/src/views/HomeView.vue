@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import LoginForm from '../components/LoginUser.vue'
 import Toast from 'primevue/toast'
-import UserInfo from '../components/UserInfo.vue'
+import { computed } from 'vue'
+import Dashboard from '@/components/dashboard/Dashboard.vue'
 import store from '../store'
 import type { User } from '../types/user'
 import { useToast } from 'primevue/usetoast'
+import router from '@/router'
+import Cookies from 'js-cookie'
+import Header from '@/components/Header.vue'
 
 const toast = useToast()
-
+const user = computed(() => store.state.user)
 const onLogout = (user: User) => {
   toast.add({
     severity: 'success',
@@ -16,13 +20,18 @@ const onLogout = (user: User) => {
     life: 3000,
   })
   store.clearUser()
+  Cookies.remove('user') // Pastikan user juga dihapus dari cookies
+  Cookies.remove('accessToken')
+  Cookies.remove('refreshToken')
+  router.push('/')
 }
 </script>
 
 <template>
   <div>
     <Toast />
-    <UserInfo v-if="store.state.user" :user="store.state.user" @logout="onLogout" />
+    <Header v-if="user" :user="user" />
+    <Dashboard v-if="user" :user="user" />
     <LoginForm v-else />
   </div>
 </template>

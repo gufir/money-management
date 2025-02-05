@@ -11,7 +11,7 @@ import axios from 'axios'
 import router from '@/router'
 
 const username = ref('')
-const fullname = ref('')
+const full_name = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const email = ref('')
@@ -19,11 +19,11 @@ const errorMessages = ref('')
 
 const isCreateDisabled = computed(() => {
   return (
-    !username.value.trim() ||
-    !fullname.value.trim() ||
+    !username.value ||
+    !full_name.value ||
     !password.value ||
     !confirmPassword.value ||
-    !email.value.trim() ||
+    !email.value ||
     password.value !== confirmPassword.value
   )
 })
@@ -46,10 +46,10 @@ const handleCreateUser = async () => {
     await axios.post(
       'http://localhost:8080/v1/create_user',
       {
-        username: username.value.trim(),
-        fullname: fullname.value.trim(),
+        username: username.value,
+        full_name: full_name.value,
         password: password.value,
-        email: email.value.trim(),
+        email: email.value,
       },
       {
         headers: {
@@ -104,7 +104,7 @@ const handleCreateUser = async () => {
             <i class="pi pi-user"></i>
           </InputGroupAddon>
           <FloatLabel>
-            <InputText id="fullname" v-model="fullname" />
+            <InputText id="fullname" v-model="full_name" />
             <label for="fullname">Full Name</label>
           </FloatLabel>
         </InputGroup>

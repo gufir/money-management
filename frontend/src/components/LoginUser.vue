@@ -9,6 +9,7 @@ import axios from 'axios'
 import { useToast } from 'primevue/usetoast'
 import router from '@/router'
 import store from '@/store'
+import Cookies from 'js-cookie'
 
 const username = ref<string>('')
 const password = ref<string>('')
@@ -32,6 +33,13 @@ const handlerLogin = async () => {
       },
     )
 
+    Cookies.set('accessToken', response.data.access_token, {
+      expires: new Date(response.data.access_token_expired_at),
+    })
+    Cookies.set('refreshToken', response.data.refresh_token, {
+      expires: new Date(response.data.refresh_token_expired_at),
+    })
+
     store.setUser(response.data.user, response.data.access_token, response.data.refresh_token)
 
     toast.add({
@@ -41,7 +49,7 @@ const handlerLogin = async () => {
       life: 3000,
     })
 
-    router.push('/dashboard')
+    router.push('/')
   } catch (error: any) {
     if (error.response && error.response.status === 404) {
       errorMessages.value = error.response.data.message
