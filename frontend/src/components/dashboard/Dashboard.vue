@@ -11,15 +11,9 @@ import Cookies from 'js-cookie'
 import Dropdown from 'primevue/dropdown'
 
 const getRandomColor = (): string => {
-  const letters = '0123456789ABCDEF'
-  let color = '#'
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)]
-  }
-  return color
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`
 }
 
-// Define types
 type Dataset = {
   data: number[]
   backgroundColor: string[]
@@ -45,96 +39,120 @@ const type = ref<string>('')
 const description = ref<string>('')
 const amount = ref<string>('')
 const categoryName = ref<string>('')
+const categories = ref<{ label: string; value: string }[]>([])
 const userId = store.state.user?.user_uuid
+const transactions = ref<any[]>([])
 const isTransactionDisabled = computed(
   () => !type.value || !description.value || !amount.value || !categoryName.value,
 )
 const toast = useToast()
-const errorMessages = ref<string>('')
 
 const typeOptions = ref([
   { label: 'Expense', value: 'expense' },
   { label: 'Income', value: 'income' },
 ])
 
+const fetchCategories = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/v1/get_categories', {
+      headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` },
+    })
+    categories.value = response.data.categories.map((category: any) => ({
+      label: category.name,
+      value: category.id,
+    }))
+  } catch (error) {
+    console.error('Error fetching categories:', error)
+  }
+}
+
+const fetchTransactions = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/v1/get_transaction', {
+      headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` },
+    })
+    transactions.value = response.data.transaction || []
+    updateChartData()
+  } catch (error) {
+    console.error('Error fetching transactions:', error)
+  }
+}
+
+const getCategoryName = (categoryId: string): string => {
+  const category = categories.value.find((c) => c.value === categoryId)
+  return category ? category.label : categoryId // Gunakan ID jika kategori belum tersedia
+}
+
+const categoryColors = ref<Record<string, string>>({})
+
+const getCategoryColor = (categoryId: string): string => {
+  if (!categoryColors.value[categoryId]) {
+    categoryColors.value[categoryId] = getRandomColor()
+  }
+  return categoryColors.value[categoryId]
+}
+const updateChartData = () => {
+  if (!transactions.value.length) return
+
+  const incomeMap = new Map<string, number>()
+  const expensesMap = new Map<string, number>()
+
+  transactions.value.forEach((t) => {
+    const categoryName = getCategoryName(t.category_id)
+    const amount = parseFloat(t.amount)
+
+    if (categoryName) {
+      if (t.type === 'income') {
+        incomeMap.set(categoryName, (incomeMap.get(categoryName) || 0) + amount)
+      } else if (t.type === 'expense') {
+        expensesMap.set(categoryName, (expensesMap.get(categoryName) || 0) + amount)
+      }
+    }
+  })
+
+  const getChartData = (dataMap: Map<string, number>) => {
+    const labels = Array.from(dataMap.keys())
+    const data = Array.from(dataMap.values())
+    const backgroundColor = labels.map((label) => {
+      const categoryId = categories.value.find((c) => c.label === label)?.value || label
+      return getCategoryColor(categoryId)
+    })
+
+    return { labels, datasets: [{ data, backgroundColor }] }
+  }
+
+  incomeData.value = getChartData(incomeMap)
+  expensesData.value = getChartData(expensesMap)
+}
+
 const handleTransaction = async () => {
   try {
-    const response = await axios.post(
+    await axios.post(
       'http://localhost:8080/v1/create_transaction',
       {
-        amount: amount.value,
+        amount: parseFloat(amount.value),
         description: description.value,
         type: type.value,
         userId: userId,
-        categoryName: categoryName.value,
+        categoryId: categoryName.value,
       },
       {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${Cookies.get('accessToken')}`,
-        },
+        headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` },
       },
     )
 
-    toast.add({
-      severity: 'success',
-      summary: `Transaction ${response.data.id} success`,
-      detail: 'Create Transaction Successful',
-      life: 3000,
-    })
-
-    fetchChartData()
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Transaction added', life: 3000 })
+    fetchTransactions()
   } catch (error: any) {
-    if (error.response && error.response.status === 404) {
-      errorMessages.value = error.response.data.message
-    } else {
-      errorMessages.value = 'An error occurred. Please try again later.'
-    }
-
-    toast.add({
-      severity: 'error',
-      summary: 'Create Transaction Failed',
-      detail: errorMessages.value,
-      life: 3000,
-    })
+    const errorMsg = error.response?.data?.message || 'An error occurred. Please try again later.'
+    toast.add({ severity: 'error', summary: 'Error', detail: errorMsg, life: 3000 })
   }
 }
 
-const fetchChartData = async () => {
-  try {
-    const response = await axios.get('http://localhost:8080/v1/transactions', {
-      headers: {
-        Authorization: `Bearer ${Cookies.get('accessToken')}`,
-      },
-    })
-    const transactions = response.data
-    const income = transactions.filter((t: any) => t.type === 'income')
-    const expenses = transactions.filter((t: any) => t.type === 'expense')
-    incomeData.value = {
-      labels: income.map((t: any) => t.category),
-      datasets: [
-        {
-          data: income.map((t: any) => t.amount),
-          backgroundColor: income.map(() => getRandomColor()),
-        },
-      ],
-    }
-
-    expensesData.value = {
-      labels: expenses.map((t: any) => t.category),
-      datasets: [
-        {
-          data: expenses.map((t: any) => t.amount),
-          backgroundColor: expenses.map(() => getRandomColor()),
-        },
-      ],
-    }
-  } catch (error) {
-    console.error('Error fetching chart data:', error)
-  }
-}
-
-onMounted(fetchChartData)
+onMounted(async () => {
+  await fetchCategories()
+  await fetchTransactions()
+})
 </script>
 
 <template>
@@ -161,9 +179,16 @@ onMounted(fetchChartData)
       </div>
     </div>
 
-    <div class="flex flex-col text-center p-4">
+    <div class="mt-6 text-center">
       <h2 class="text-md font-semibold">Add Transaction</h2>
-      <InputText v-model="categoryName" placeholder="Category" class="w-full mb-2" />
+      <Dropdown
+        v-model="categoryName"
+        :options="categories"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Select Category"
+        class="w-full mb-2"
+      />
       <InputText v-model="description" placeholder="Description" class="w-full mb-2" />
       <InputText v-model="amount" placeholder="Amount" type="number" class="w-full mb-2" />
       <Dropdown
@@ -180,10 +205,6 @@ onMounted(fetchChartData)
         @click="handleTransaction"
         :disabled="isTransactionDisabled"
       />
-    </div>
-
-    <div class="flex flex-col text-center p-4">
-      <Button label="View Detailed Report" class="p-button-success" />
     </div>
   </div>
 </template>

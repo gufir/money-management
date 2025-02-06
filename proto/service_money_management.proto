@@ -12,6 +12,7 @@ import "rpc_update_transaction.proto";
 import "rpc_create_categories.proto";
 import "rpc_update_categories.proto";
 import "rpc_get_categories.proto";
+import "rpc_get_transaction.proto";
 
 
 option go_package = "github.com/gufir/money-management/pb";
@@ -19,7 +20,7 @@ option go_package = "github.com/gufir/money-management/pb";
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     info: {
       title: "Money Management API"
-      version: "1.2"
+      version: "1.3"
       contact: {
         name: "gufir"
         url: "https://github.com/gufir"
@@ -122,6 +123,17 @@ service MoneyManagement {
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to get all categories."
             summary: "Get all categories"
+        };
+    }
+
+    rpc GetTransaction (GetTransactionRequest) returns (GetTransactionResponse){
+        option (google.api.http) = {
+            get: "/v1/get_transaction"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to get transaction"
+            summary: "Get transaction"
         };
     }
 }
