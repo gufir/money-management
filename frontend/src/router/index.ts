@@ -52,17 +52,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isAuth = isAuthenticated()
   if (to.meta.requiresUnauth && isAuth) {
-    next('/') // or next('/dashboard')
+    next('/')
   } else if (to.meta.requiresAuth && !isAuth) {
     next('/access-denied')
   } else {
     next()
   }
-  // if (to.meta.requiresAuth && !isAuthenticated()) {
-  //   next('/access-denied')
-  // } else {
-  //   next()
-  // }
 })
 
 export default router

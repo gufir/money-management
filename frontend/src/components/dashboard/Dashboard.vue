@@ -9,6 +9,10 @@ import Header from '../Header.vue'
 import { useToast } from 'primevue/usetoast'
 import Cookies from 'js-cookie'
 import Dropdown from 'primevue/dropdown'
+import InputNumber from 'primevue/inputnumber'
+import SubMenu from '../SubMenu.vue'
+
+const showSidebar = ref(false)
 
 const getRandomColor = (): string => {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`
@@ -37,7 +41,7 @@ const chartOptions = ref({
 
 const type = ref<string>('')
 const description = ref<string>('')
-const amount = ref<string>('')
+const amount = ref<number>()
 const categoryName = ref<string>('')
 const categories = ref<{ label: string; value: string }[]>([])
 const userId = store.state.user?.user_uuid
@@ -130,7 +134,7 @@ const handleTransaction = async () => {
     await axios.post(
       'http://localhost:8080/v1/create_transaction',
       {
-        amount: parseFloat(amount.value),
+        amount: amount.value,
         description: description.value,
         type: type.value,
         userId: userId,
@@ -156,10 +160,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Header />
-  <div class="p-4">
+  <Header :showSidebar="showSidebar" @updateShowSidebar="showSidebar = $event" />
+
+  <div :class="['p-4', { 'ml-64': showSidebar, 'ml-0': !showSidebar }]">
     <div class="flex flex-col md:flex-row justify-between gap-4 p-4">
-      <div class="w-full md:w-1/2 p-4 shadow-md rounded bg-white">
+      <div class="w-full md:w-full p-4 shadow-md rounded bg-white">
         <h2 class="text-md font-semibold">Income Overview</h2>
         <Chart
           type="pie"
@@ -168,7 +173,7 @@ onMounted(async () => {
           style="max-width: 320px; margin: auto"
         />
       </div>
-      <div class="w-full md:w-1/2 p-4 shadow-md rounded bg-white">
+      <div class="w-full md:w-full p-4 shadow-md rounded bg-white">
         <h2 class="text-md font-semibold">Expenses Overview</h2>
         <Chart
           type="pie"
@@ -178,33 +183,42 @@ onMounted(async () => {
         />
       </div>
     </div>
-
-    <div class="mt-6 text-center">
-      <h2 class="text-md font-semibold">Add Transaction</h2>
-      <Dropdown
-        v-model="categoryName"
-        :options="categories"
-        optionLabel="label"
-        optionValue="value"
-        placeholder="Select Category"
-        class="w-full mb-2"
-      />
-      <InputText v-model="description" placeholder="Description" class="w-full mb-2" />
-      <InputText v-model="amount" placeholder="Amount" type="number" class="w-full mb-2" />
-      <Dropdown
-        v-model="type"
-        :options="typeOptions"
-        optionLabel="label"
-        optionValue="value"
-        placeholder="Select Type"
-        class="w-full mb-2"
-      />
-      <Button
-        label="Add Transaction"
-        class="p-button-success w-full"
-        @click="handleTransaction"
-        :disabled="isTransactionDisabled"
-      />
+    <div class="flex items-center justify-center mt-4">
+      <div class="w-1/2 md:flex-row shadow-md rounded bg-white items-center p-4">
+        <div class="flex flex-col items-center gap-2 justify-center">
+          <h2 class="text-md font-semibold p-4">Add Transaction</h2>
+          <Dropdown
+            v-model="categoryName"
+            :options="categories"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select Category"
+            class="w-1/2 mb-2"
+          />
+          <InputText v-model="description" placeholder="Description" class="w-1/2" />
+          <InputNumber
+            v-model="amount"
+            placeholder="Amount"
+            inputId="locale-german"
+            type="number"
+            class="w-1/2 mb-2"
+          />
+          <Dropdown
+            v-model="type"
+            :options="typeOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select Type"
+            class="w-1/2 mb-2"
+          />
+          <Button
+            label="Add Transaction"
+            class="p-button-success w-1/2"
+            @click="handleTransaction"
+            :disabled="isTransactionDisabled"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
