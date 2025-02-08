@@ -42,6 +42,12 @@ const router = createRouter({
       component: () => import('@/components/dashboard/Dashboard.vue'),
     },
     {
+      path: '/transaction',
+      name: 'Transaction',
+      meta: { requiresAuth: true },
+      component: () => import('@/components/Transaction.vue'),
+    },
+    {
       path: '/access-denied',
       name: 'AccessDenied',
       component: () => import('@/views/pages/Unauthorized.vue'),

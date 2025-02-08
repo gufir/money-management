@@ -3,11 +3,11 @@ import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const menuItems = ref([
-  { label: 'Dashboard', icon: 'pi pi-home', subMenus: [], path: '/', name: 'Home' },
+  { label: 'Dashboard', icon: 'pi pi-home', subMenus: [], path: '/dashboard', name: 'Dashboard' },
   {
     label: 'Transactions',
     icon: 'pi pi-wallet',
-    path: '/transactions',
+    path: '/transaction',
     subMenus: ['View Transactions', 'Add Transaction'],
     name: 'Transaction',
   },
