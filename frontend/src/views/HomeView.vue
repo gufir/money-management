@@ -9,6 +9,7 @@ import { useToast } from 'primevue/usetoast'
 import router from '@/router'
 import Cookies from 'js-cookie'
 import Header from '@/components/Header.vue'
+import Transaction from '@/components/Transaction.vue'
 
 const toast = useToast()
 const user = computed(() => store.state.user)
@@ -20,7 +21,7 @@ const onLogout = (user: User) => {
     life: 3000,
   })
   store.clearUser()
-  Cookies.remove('user') // Pastikan user juga dihapus dari cookies
+  Cookies.remove('user')
   Cookies.remove('accessToken')
   Cookies.remove('refreshToken')
   router.push('/')
@@ -30,7 +31,6 @@ const onLogout = (user: User) => {
 <template>
   <div>
     <Toast />
-    <Header v-if="user" :user="user" />
     <Dashboard v-if="user" :user="user" />
     <LoginForm v-else />
   </div>
