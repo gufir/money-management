@@ -10,6 +10,7 @@ import Cookies from 'js-cookie'
 import Dropdown from 'primevue/dropdown'
 import InputNumber from 'primevue/inputnumber'
 import Toast from 'primevue/toast'
+import TransactionList from './TransactionList.vue'
 
 const showSidebar = ref(false)
 
@@ -81,6 +82,7 @@ onMounted(async () => {
   <Header :showSidebar="showSidebar" @updateShowSidebar="showSidebar = $event" />
 
   <div :class="['p-4', { 'ml-64': showSidebar, 'ml-0': !showSidebar }]">
+    <TransactionList />
     <div class="flex items-center justify-center mt-4">
       <div class="w-full md:flex-row shadow-md rounded bg-white items-center p-4">
         <div class="flex flex-col items-center gap-2 justify-center">
