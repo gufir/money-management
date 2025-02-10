@@ -185,43 +185,6 @@ onMounted(async () => {
         />
       </div>
     </div>
-    <div class="flex items-center justify-center mt-4">
-      <div class="w-1/2 md:flex-row shadow-md rounded bg-white items-center p-4">
-        <div class="flex flex-col items-center gap-2 justify-center">
-          <h2 class="text-md font-semibold p-4">Add Transaction</h2>
-          <Dropdown
-            v-model="categoryName"
-            :options="categories"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Select Category"
-            class="w-1/2 mb-2"
-          />
-          <InputText v-model="description" placeholder="Description" class="w-1/2" />
-          <InputNumber
-            v-model="amount"
-            placeholder="Amount"
-            inputId="locale-german"
-            type="number"
-            class="w-1/2 mb-2"
-          />
-          <Dropdown
-            v-model="type"
-            :options="typeOptions"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Select Type"
-            class="w-1/2 mb-2"
-          />
-          <Button
-            label="Add Transaction"
-            class="p-button-success w-1/2"
-            @click="handleTransaction"
-            :disabled="isTransactionDisabled"
-          />
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 

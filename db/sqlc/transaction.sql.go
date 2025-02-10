@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -130,30 +131,46 @@ func (q *Queries) GetTransactionByType(ctx context.Context, arg GetTransactionBy
 }
 
 const getTransactionByuserId = `-- name: GetTransactionByuserId :many
-SELECT id, user_id, amount, type, category_id, description, created_at, updated_at, deleted_at
-FROM "transaction"
+SELECT t.id, description, amount, type, created_at, updated_at, deleted_at, name, category_id, user_id
+FROM "transaction" t
+JOIN "categories" c
+ON t.category_id = c.id
 WHERE user_id = $1
 `
 
-func (q *Queries) GetTransactionByuserId(ctx context.Context, userID uuid.UUID) ([]Transaction, error) {
+type GetTransactionByuserIdRow struct {
+	ID          uuid.UUID          `json:"id"`
+	Description string             `json:"description"`
+	Amount      int64              `json:"amount"`
+	Type        string             `json:"type"`
+	CreatedAt   time.Time          `json:"created_at"`
+	UpdatedAt   time.Time          `json:"updated_at"`
+	DeletedAt   pgtype.Timestamptz `json:"deleted_at"`
+	Name        string             `json:"name"`
+	CategoryID  uuid.UUID          `json:"category_id"`
+	UserID      uuid.UUID          `json:"user_id"`
+}
+
+func (q *Queries) GetTransactionByuserId(ctx context.Context, userID uuid.UUID) ([]GetTransactionByuserIdRow, error) {
 	rows, err := q.db.Query(ctx, getTransactionByuserId, userID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Transaction{}
+	items := []GetTransactionByuserIdRow{}
 	for rows.Next() {
-		var i Transaction
+		var i GetTransactionByuserIdRow
 		if err := rows.Scan(
 			&i.ID,
-			&i.UserID,
+			&i.Description,
 			&i.Amount,
 			&i.Type,
-			&i.CategoryID,
-			&i.Description,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.DeletedAt,
+			&i.Name,
+			&i.CategoryID,
+			&i.UserID,
 		); err != nil {
 			return nil, err
 		}

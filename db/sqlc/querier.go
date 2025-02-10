@@ -27,7 +27,7 @@ type Querier interface {
 	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 	GetTransaction(ctx context.Context, id uuid.UUID) (Transaction, error)
 	GetTransactionByType(ctx context.Context, arg GetTransactionByTypeParams) ([]Transaction, error)
-	GetTransactionByuserId(ctx context.Context, userID uuid.UUID) ([]Transaction, error)
+	GetTransactionByuserId(ctx context.Context, userID uuid.UUID) ([]GetTransactionByuserIdRow, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserById(ctx context.Context, id int64) (User, error)
 	GetUserByUsername(ctx context.Context, username string) (User, error)
