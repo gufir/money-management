@@ -28,8 +28,10 @@ FROM "transaction"
 WHERE type = $1 AND user_id = $2;
 
 -- name: GetTransactionByuserId :many
-SELECT *
-FROM "transaction"
+SELECT t.id, description, amount, type, created_at, updated_at, deleted_at, name, category_id, user_id
+FROM "transaction" t
+JOIN "categories" c
+ON t.category_id = c.id
 WHERE user_id = $1;
 
 -- name: UpdateTransaction :one

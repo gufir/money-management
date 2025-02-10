@@ -52,9 +52,24 @@ const toggleSidebar = () => {
 
     <div class="flex items-center gap-x-4">
       <InputText v-model="searchQuery" placeholder="Search..." class="p-inputtext-sm" />
-      <Button label="Generate Report" class="p-button-success" />
+      <Button label="Generate Report" class="p-button-success hover-button" />
       <Button label="Logout" class="p-button-danger" @click="handlerLogout" />
     </div>
     <SidebarMenu v-if="showSidebar" />
   </header>
 </template>
+
+<style>
+.hover-button {
+  background-color: #27fb2d !important;
+  border-color: #27fb2d !important;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.hover-button:hover {
+  background-color: #23d628 !important;
+  border-color: #23d628 !important;
+}
+</style>

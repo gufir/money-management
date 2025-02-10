@@ -290,10 +290,10 @@ func (mr *MockStoreMockRecorder) GetTransactionByType(arg0, arg1 interface{}) *g
 }
 
 // GetTransactionByuserId mocks base method.
-func (m *MockStore) GetTransactionByuserId(arg0 context.Context, arg1 uuid.UUID) ([]db.Transaction, error) {
+func (m *MockStore) GetTransactionByuserId(arg0 context.Context, arg1 uuid.UUID) ([]db.GetTransactionByuserIdRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTransactionByuserId", arg0, arg1)
-	ret0, _ := ret[0].([]db.Transaction)
+	ret0, _ := ret[0].([]db.GetTransactionByuserIdRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

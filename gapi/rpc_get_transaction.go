@@ -7,6 +7,7 @@ import (
 	"github.com/gufir/money-management/utils"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func (server *Server) GetTransaction(ctx context.Context, req *pb.GetTransactionRequest) (*pb.GetTransactionResponse, error) {
@@ -27,12 +28,14 @@ func (server *Server) GetTransaction(ctx context.Context, req *pb.GetTransaction
 	var pbTx []*pb.Transaction
 	for _, tx := range transaction {
 		pbTx = append(pbTx, &pb.Transaction{
-			Id:          tx.ID.String(),
-			Amount:      tx.Amount,
-			Type:        tx.Type,
-			Description: tx.Description,
-			CategoryId:  tx.CategoryID.String(),
-			UserId:      tx.UserID.String(),
+			Id:           tx.ID.String(),
+			Amount:       tx.Amount,
+			Type:         tx.Type,
+			Description:  tx.Description,
+			CategoryName: tx.Name,
+			UserId:       tx.UserID.String(),
+			CategoryId:   tx.CategoryID.String(),
+			CreatedAt:    timestamppb.New(tx.CreatedAt),
 		})
 	}
 
