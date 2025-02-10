@@ -1,0 +1,14 @@
+syntax="proto3";
+package pb;
+
+import "user.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/gufir/money-management/pb";
+
+message GetUserRequest{
+}
+
+message GetUserResponse {
+    repeated User user = 1;
+}

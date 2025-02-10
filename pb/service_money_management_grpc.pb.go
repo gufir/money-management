@@ -27,6 +27,7 @@ type MoneyManagementClient interface {
 	UpdateCategories(ctx context.Context, in *UpdateCategoriesRequest, opts ...grpc.CallOption) (*UpdateCategoriesResponse, error)
 	GetCategories(ctx context.Context, in *GetCategoriesRequest, opts ...grpc.CallOption) (*GetCategoriesResponse, error)
 	GetTransaction(ctx context.Context, in *GetTransactionRequest, opts ...grpc.CallOption) (*GetTransactionResponse, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 }
 
 type moneyManagementClient struct {
@@ -118,6 +119,15 @@ func (c *moneyManagementClient) GetTransaction(ctx context.Context, in *GetTrans
 	return out, nil
 }
 
+func (c *moneyManagementClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
+	out := new(GetUserResponse)
+	err := c.cc.Invoke(ctx, "/pb.MoneyManagement/GetUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MoneyManagementServer is the server API for MoneyManagement service.
 // All implementations must embed UnimplementedMoneyManagementServer
 // for forward compatibility
@@ -131,6 +141,7 @@ type MoneyManagementServer interface {
 	UpdateCategories(context.Context, *UpdateCategoriesRequest) (*UpdateCategoriesResponse, error)
 	GetCategories(context.Context, *GetCategoriesRequest) (*GetCategoriesResponse, error)
 	GetTransaction(context.Context, *GetTransactionRequest) (*GetTransactionResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	mustEmbedUnimplementedMoneyManagementServer()
 }
 
@@ -164,6 +175,9 @@ func (UnimplementedMoneyManagementServer) GetCategories(context.Context, *GetCat
 }
 func (UnimplementedMoneyManagementServer) GetTransaction(context.Context, *GetTransactionRequest) (*GetTransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransaction not implemented")
+}
+func (UnimplementedMoneyManagementServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedMoneyManagementServer) mustEmbedUnimplementedMoneyManagementServer() {}
 
@@ -340,6 +354,24 @@ func _MoneyManagement_GetTransaction_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MoneyManagement_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MoneyManagementServer).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.MoneyManagement/GetUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MoneyManagementServer).GetUser(ctx, req.(*GetUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MoneyManagement_ServiceDesc is the grpc.ServiceDesc for MoneyManagement service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -382,6 +414,10 @@ var MoneyManagement_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTransaction",
 			Handler:    _MoneyManagement_GetTransaction_Handler,
+		},
+		{
+			MethodName: "GetUser",
+			Handler:    _MoneyManagement_GetUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

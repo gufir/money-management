@@ -30,6 +30,7 @@ type Querier interface {
 	GetTransactionByuserId(ctx context.Context, userID uuid.UUID) ([]GetTransactionByuserIdRow, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserById(ctx context.Context, id int64) (User, error)
+	GetUserByUserId(ctx context.Context, userUuid uuid.UUID) (User, error)
 	GetUserByUsername(ctx context.Context, username string) (User, error)
 	UpdateCategories(ctx context.Context, arg UpdateCategoriesParams) (Category, error)
 	UpdateTransaction(ctx context.Context, arg UpdateTransactionParams) (Transaction, error)

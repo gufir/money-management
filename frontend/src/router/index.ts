@@ -48,6 +48,12 @@ const router = createRouter({
       component: () => import('@/components/Transaction.vue'),
     },
     {
+      path: '/settings',
+      name: 'Settings',
+      meta: { requireAuth: true },
+      component: () => import('@/components/ProfileSetting.vue'),
+    },
+    {
       path: '/access-denied',
       name: 'AccessDenied',
       component: () => import('@/views/pages/Unauthorized.vue'),
