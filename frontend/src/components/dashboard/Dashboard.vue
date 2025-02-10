@@ -12,6 +12,7 @@ import Dropdown from 'primevue/dropdown'
 import InputNumber from 'primevue/inputnumber'
 import SubMenu from '../SubMenu.vue'
 import Toast from 'primevue/toast'
+import TransactionList from '../TransactionList.vue'
 
 const showSidebar = ref(false)
 
@@ -165,8 +166,8 @@ onMounted(async () => {
   <Header :showSidebar="showSidebar" @updateShowSidebar="showSidebar = $event" />
 
   <div :class="['p-4', { 'ml-64': showSidebar, 'ml-0': !showSidebar }]">
-    <div class="flex flex-col md:flex-row justify-between gap-4 p-4">
-      <div class="w-full md:w-full p-4 shadow-md rounded bg-white">
+    <div class="flex flex-col md:flex-row justify-center gap-4 p-4 w-full">
+      <div class="w-full md:flex-row shadow-md rounded bg-white p-4">
         <h2 class="text-md font-semibold">Income Overview</h2>
         <Chart
           type="pie"
@@ -175,7 +176,7 @@ onMounted(async () => {
           style="max-width: 320px; margin: auto"
         />
       </div>
-      <div class="w-full md:w-full p-4 shadow-md rounded bg-white">
+      <div class="w-full md:flex-row shadow-md rounded bg-white p-4">
         <h2 class="text-md font-semibold">Expenses Overview</h2>
         <Chart
           type="pie"
@@ -188,8 +189,4 @@ onMounted(async () => {
   </div>
 </template>
 
-<style>
-body {
-  background-color: #f8f9fa;
-}
-</style>
+<style></style>

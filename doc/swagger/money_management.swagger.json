@@ -171,6 +171,30 @@
         ]
       }
     },
+    "/v1/get_user": {
+      "get": {
+        "summary": "Get User",
+        "description": "Use this API to get User Data",
+        "operationId": "MoneyManagement_GetUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
     "/v1/login_user": {
       "post": {
         "summary": "Login user",
@@ -417,6 +441,18 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/pbTransaction"
+          }
+        }
+      }
+    },
+    "pbGetUserResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbUser"
           }
         }
       }
