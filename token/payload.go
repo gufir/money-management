@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
 
@@ -45,4 +46,30 @@ func (payload *Payload) Valid() error {
 	}
 
 	return nil
+}
+
+func (p *Payload) GetIssuer() (string, error) {
+	return "", nil
+}
+
+func (p *Payload) GetAudience() (jwt.ClaimStrings, error) {
+	return nil, nil
+}
+
+func (p *Payload) GetExpirationTime() (*jwt.NumericDate, error) {
+	expirationTime := jwt.NewNumericDate(p.ExpiredAt)
+	return expirationTime, nil
+}
+
+func (p *Payload) GetNotBefore() (*jwt.NumericDate, error) {
+	return nil, nil
+}
+
+func (p *Payload) GetIssuedAt() (*jwt.NumericDate, error) {
+	issueTime := jwt.NewNumericDate(p.CreatedAt)
+	return issueTime, nil
+}
+
+func (p *Payload) GetSubject() (string, error) {
+	return p.Username, nil
 }
