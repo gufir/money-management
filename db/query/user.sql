@@ -21,8 +21,7 @@ LIMIT 1;
 
 -- name: GetUserByUserId :one
 SELECT * FROM users 
-WHERE user_uuid = $1
-LIMIT 1;
+WHERE user_uuid = $1;
 
 -- name: GetUserByUsername :one
 SELECT * FROM users 
