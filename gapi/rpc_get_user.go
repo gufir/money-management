@@ -22,7 +22,7 @@ func (server *Server) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.
 	pbUser = append(pbUser, &pb.User{
 		Username:  user.Username,
 		FullName:  user.FullName,
-		Email:     user.FullName,
+		Email:     user.Email,
 		CreatedAt: timestamppb.New(user.CreatedAt),
 		UpdatedAt: timestamppb.New(user.UpdatedAt),
 		UserUuid:  user.UserUuid.String(),
