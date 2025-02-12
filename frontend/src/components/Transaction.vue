@@ -109,7 +109,6 @@ onMounted(async () => {
     </div>
   </div>
 
-  <!-- Add Transaction Modal -->
   <Dialog v-model:visible="showDialog" header="Add Transaction" modal :style="{ width: '400px' }">
     <div class="flex flex-col items-center gap-2">
       <Dropdown
