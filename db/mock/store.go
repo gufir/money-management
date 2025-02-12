@@ -52,11 +52,12 @@ func (mr *MockStoreMockRecorder) CreateCategories(arg0, arg1 interface{}) *gomoc
 }
 
 // CreateMonthlyReport mocks base method.
-func (m *MockStore) CreateMonthlyReport(arg0 context.Context, arg1 uuid.UUID) error {
+func (m *MockStore) CreateMonthlyReport(arg0 context.Context, arg1 db.CreateMonthlyReportParams) (db.Report, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateMonthlyReport", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(db.Report)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreateMonthlyReport indicates an expected call of CreateMonthlyReport.
@@ -66,11 +67,12 @@ func (mr *MockStoreMockRecorder) CreateMonthlyReport(arg0, arg1 interface{}) *go
 }
 
 // CreateReportUser mocks base method.
-func (m *MockStore) CreateReportUser(arg0 context.Context, arg1 db.CreateReportUserParams) error {
+func (m *MockStore) CreateReportUser(arg0 context.Context, arg1 db.CreateReportUserParams) (db.Report, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateReportUser", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(db.Report)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreateReportUser indicates an expected call of CreateReportUser.

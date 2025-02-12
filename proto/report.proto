@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/gufir/money-management/pb";
+
+message Report {
+    string id = 1;
+    string user_id = 2;
+    string period = 3;
+    double total_income = 4;
+    double total_expense = 5;
+}

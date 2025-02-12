@@ -26,7 +26,7 @@ SELECT t.category_id,
 FROM transaction t
 GROUP BY t.category_id;
 
--- name: CreateReportUser :exec
+-- name: CreateReportUser :one
 INSERT INTO reports (
   id,
   user_id,
@@ -43,9 +43,10 @@ SELECT
 FROM transaction t
 WHERE t.user_id = $1
 AND t.created_at BETWEEN NOW() - INTERVAL '1 day' AND NOW()
-GROUP BY t.user_id;
+GROUP BY t.user_id
+RETURNING *;
 
--- name: CreateMonthlyReport :exec
+-- name: CreateMonthlyReport :one
 INSERT INTO reports (
   id,
   user_id,
@@ -54,7 +55,7 @@ INSERT INTO reports (
   total_expense
 )
 SELECT
-  uuid_generate_v4(),  -- New ID generated for the report
+  $2,
   t.user_id,
   'Monthly',
   SUM(CASE WHEN t.type = 'income' THEN t.amount ELSE 0 END),
@@ -62,4 +63,5 @@ SELECT
 FROM transaction t
 WHERE t.user_id = $1
 AND t.created_at BETWEEN DATE_TRUNC('month', NOW()) AND NOW()
-GROUP BY t.user_id;
+GROUP BY t.user_id
+RETURNING *;

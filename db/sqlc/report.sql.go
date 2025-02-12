@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 )
 
-const createMonthlyReport = `-- name: CreateMonthlyReport :exec
+const createMonthlyReport = `-- name: CreateMonthlyReport :one
 INSERT INTO reports (
   id,
   user_id,
@@ -21,7 +21,7 @@ INSERT INTO reports (
   total_expense
 )
 SELECT
-  uuid_generate_v4(),  -- New ID generated for the report
+  $2,
   t.user_id,
   'Monthly',
   SUM(CASE WHEN t.type = 'income' THEN t.amount ELSE 0 END),
@@ -30,14 +30,31 @@ FROM transaction t
 WHERE t.user_id = $1
 AND t.created_at BETWEEN DATE_TRUNC('month', NOW()) AND NOW()
 GROUP BY t.user_id
+RETURNING id, user_id, period, total_income, total_expense, created_at, updated_at, deleted_at
 `
 
-func (q *Queries) CreateMonthlyReport(ctx context.Context, userID uuid.UUID) error {
-	_, err := q.db.Exec(ctx, createMonthlyReport, userID)
-	return err
+type CreateMonthlyReportParams struct {
+	UserID uuid.UUID `json:"user_id"`
+	ID     uuid.UUID `json:"id"`
 }
 
-const createReportUser = `-- name: CreateReportUser :exec
+func (q *Queries) CreateMonthlyReport(ctx context.Context, arg CreateMonthlyReportParams) (Report, error) {
+	row := q.db.QueryRow(ctx, createMonthlyReport, arg.UserID, arg.ID)
+	var i Report
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Period,
+		&i.TotalIncome,
+		&i.TotalExpense,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
+const createReportUser = `-- name: CreateReportUser :one
 INSERT INTO reports (
   id,
   user_id,
@@ -55,6 +72,7 @@ FROM transaction t
 WHERE t.user_id = $1
 AND t.created_at BETWEEN NOW() - INTERVAL '1 day' AND NOW()
 GROUP BY t.user_id
+RETURNING id, user_id, period, total_income, total_expense, created_at, updated_at, deleted_at
 `
 
 type CreateReportUserParams struct {
@@ -62,9 +80,20 @@ type CreateReportUserParams struct {
 	ID     uuid.UUID `json:"id"`
 }
 
-func (q *Queries) CreateReportUser(ctx context.Context, arg CreateReportUserParams) error {
-	_, err := q.db.Exec(ctx, createReportUser, arg.UserID, arg.ID)
-	return err
+func (q *Queries) CreateReportUser(ctx context.Context, arg CreateReportUserParams) (Report, error) {
+	row := q.db.QueryRow(ctx, createReportUser, arg.UserID, arg.ID)
+	var i Report
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Period,
+		&i.TotalIncome,
+		&i.TotalExpense,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
 }
 
 const getDetailsReportByUser = `-- name: GetDetailsReportByUser :many

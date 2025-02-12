@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import Card from 'primevue/card'
-import Avatar from 'primevue/avatar'
-import Dropdown from 'primevue/dropdown'
 import InputText from 'primevue/inputtext'
-import Textarea from 'primevue/textarea'
 import Password from 'primevue/password'
-import Checkbox from 'primevue/checkbox'
 import Button from 'primevue/button'
 import axios from 'axios'
 import Cookies from 'js-cookie'
@@ -24,6 +20,8 @@ var user = ref<User | null>(null)
 const toast = useToast()
 const newFullName = ref<string>('')
 const newEmail = ref<string>('')
+const currentPassword = ref<string>('')
+const newPassword = ref<string>('')
 
 const fetchUserData = async () => {
   try {
@@ -48,6 +46,16 @@ const fetchUserData = async () => {
 const showDialog = ref(false)
 
 const handleUpdateUser = async () => {
+  if (!store.state.user) {
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'User not found in store.',
+      life: 3000,
+    })
+    return
+  }
+
   const dataToSend =
     newFullName.value !== '' && newEmail.value !== ''
       ? { username: store.state.user.username, full_name: newFullName.value, email: newEmail.value }
@@ -60,10 +68,6 @@ const handleUpdateUser = async () => {
     })
 
     toast.add({ severity: 'success', summary: 'Success', detail: 'User Changed', life: 3000 })
-    const resetForm = () => {
-      username.value = ''
-      email.value = ''
-    }
     fetchUserData()
     showDialog.value = false
   } catch (error: any) {
@@ -71,6 +75,10 @@ const handleUpdateUser = async () => {
     toast.add({ severity: 'error', summary: 'Error', detail: errorMsg, life: 3000 })
   }
 }
+
+const isUpdateUserdisabled = computed(() => {
+  return !newFullName.value || !newEmail.value
+})
 
 onMounted(() => {
   fetchUserData()
