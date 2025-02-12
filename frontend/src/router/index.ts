@@ -54,6 +54,12 @@ const router = createRouter({
       component: () => import('@/components/ProfileSetting.vue'),
     },
     {
+      path: '/reports',
+      name: 'Reports',
+      meta: { requireAuth: true },
+      component: () => import('@/components/Report.vue'),
+    },
+    {
       path: '/access-denied',
       name: 'AccessDenied',
       component: () => import('@/views/pages/Unauthorized.vue'),
