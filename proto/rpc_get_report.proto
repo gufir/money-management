@@ -1,0 +1,57 @@
+syntax="proto3";
+
+package pb;
+
+import "report.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/gufir/money-management/pb";
+
+message GetReportByUserRequest {
+    string user_id = 1;
+}
+
+message GetReportByUserResponse {
+    string user_id = 1;
+    double total_income = 2;
+    double total_expense = 3;
+}
+
+message GetDetailsReportByUserRequest {
+    string user_id = 1;
+}
+
+message GetDetailsReportByUserResponse {
+    string id = 1;
+    string user_id = 2;
+    double amount = 3;
+    string description = 4;
+    string created_at = 5;
+}
+
+message GetReportByDateRequest {
+    string user_id = 1;
+    string start_date = 2;
+    string end_date = 3;
+}
+
+message ReportByDate {
+    string id = 1;
+    string user_id = 2;
+    double amount = 3;
+    string type = 4;
+    string description = 5;
+    google.protobuf.Timestamp created_at = 6;
+}
+
+message GetReportByDateResponse {
+    repeated ReportByDate reports=1;
+}
+
+message GetReportByCategoryRequest {}
+
+message GetReportByCategoryResponse {
+    string category_id = 1;
+    double total_income = 2;
+    double total_expense = 3;
+}

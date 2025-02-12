@@ -14,14 +14,16 @@ import "rpc_update_categories.proto";
 import "rpc_get_categories.proto";
 import "rpc_get_transaction.proto";
 import "rpc_get_user.proto";
-
+import "rpc_create_report.proto";
+import "rpc_create_monthly_report.proto";
+import "rpc_get_report.proto";
 
 option go_package = "github.com/gufir/money-management/pb";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     info: {
       title: "Money Management API"
-      version: "1.3"
+      version: "1.5"
       contact: {
         name: "gufir"
         url: "https://github.com/gufir"
@@ -146,6 +148,73 @@ service MoneyManagement {
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to get User Data"
             summary: "Get User"
+        };
+    }
+
+    rpc CreateReport (CreateReportRequest) returns (CreateReportResponse){
+        option (google.api.http) = {
+            post: "/v1/create_report"
+            body: "*"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to create a Report"
+            summary: "Create Report"
+        };
+    }
+
+    rpc CreateMonthlyReport (CreateMonthlyReportRequest) returns (CreateMonthlyReportResponse){
+        option (google.api.http) = {
+            post: "/v1/create_monthly_report"
+            body: "*"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to create a Monthly Report"
+            summary: "Create Monthly Report"
+        };
+    }
+
+    rpc GetReportByUser (GetReportByUserRequest) returns (GetReportByUserResponse) {
+        option (google.api.http) = {
+            get: "/v1/get_report_by_user"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to Get Report by User"
+            summary: "Get Report by User"
+        };
+    }
+
+    rpc GetDetailsReportByUser (GetDetailsReportByUserRequest) returns (GetDetailsReportByUserResponse) {
+        option (google.api.http) = {
+            get: "/v1/get_details_report_by_user"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to Get Details Report by User"
+            summary: "Get Report Details by User"
+        };
+    }
+
+    rpc GetReportByDate (GetReportByDateRequest) returns (GetReportByDateResponse) {
+        option (google.api.http) = {
+            get: "/v1/get_report_by_date"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to Get Report by Date"
+            summary: "Get Report Details by Date"
+        };
+    }
+
+    rpc GetReportByCategory (GetReportByCategoryRequest) returns (GetReportByCategoryResponse) {
+        option (google.api.http) = {
+            get: "/v1/get_report_by_category"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to Get Report by Category"
+            summary: "Get Report by Category"
         };
     }
 }

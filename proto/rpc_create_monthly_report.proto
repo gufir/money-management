@@ -1,0 +1,15 @@
+syntax = "proto3";
+package pb;
+
+import "report.proto";
+
+option go_package = "github.com/gufir/money-management/pb";
+
+message CreateMonthlyReportRequest {
+    string user_id = 1;
+    string report_id = 2;
+}
+
+message CreateMonthlyReportResponse {
+    Report report = 1;
+}

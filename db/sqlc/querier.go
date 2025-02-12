@@ -12,8 +12,8 @@ import (
 
 type Querier interface {
 	CreateCategories(ctx context.Context, arg CreateCategoriesParams) (Category, error)
-	CreateMonthlyReport(ctx context.Context, userID uuid.UUID) error
-	CreateReportUser(ctx context.Context, arg CreateReportUserParams) error
+	CreateMonthlyReport(ctx context.Context, arg CreateMonthlyReportParams) (Report, error)
+	CreateReportUser(ctx context.Context, arg CreateReportUserParams) (Report, error)
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateTransaction(ctx context.Context, arg CreateTransactionParams) (Transaction, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)

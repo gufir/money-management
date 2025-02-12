@@ -28,6 +28,12 @@ type MoneyManagementClient interface {
 	GetCategories(ctx context.Context, in *GetCategoriesRequest, opts ...grpc.CallOption) (*GetCategoriesResponse, error)
 	GetTransaction(ctx context.Context, in *GetTransactionRequest, opts ...grpc.CallOption) (*GetTransactionResponse, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	CreateReport(ctx context.Context, in *CreateReportRequest, opts ...grpc.CallOption) (*CreateReportResponse, error)
+	CreateMonthlyReport(ctx context.Context, in *CreateMonthlyReportRequest, opts ...grpc.CallOption) (*CreateMonthlyReportResponse, error)
+	GetReportByUser(ctx context.Context, in *GetReportByUserRequest, opts ...grpc.CallOption) (*GetReportByUserResponse, error)
+	GetDetailsReportByUser(ctx context.Context, in *GetDetailsReportByUserRequest, opts ...grpc.CallOption) (*GetDetailsReportByUserResponse, error)
+	GetReportByDate(ctx context.Context, in *GetReportByDateRequest, opts ...grpc.CallOption) (*GetReportByDateResponse, error)
+	GetReportByCategory(ctx context.Context, in *GetReportByCategoryRequest, opts ...grpc.CallOption) (*GetReportByCategoryResponse, error)
 }
 
 type moneyManagementClient struct {
@@ -128,6 +134,60 @@ func (c *moneyManagementClient) GetUser(ctx context.Context, in *GetUserRequest,
 	return out, nil
 }
 
+func (c *moneyManagementClient) CreateReport(ctx context.Context, in *CreateReportRequest, opts ...grpc.CallOption) (*CreateReportResponse, error) {
+	out := new(CreateReportResponse)
+	err := c.cc.Invoke(ctx, "/pb.MoneyManagement/CreateReport", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *moneyManagementClient) CreateMonthlyReport(ctx context.Context, in *CreateMonthlyReportRequest, opts ...grpc.CallOption) (*CreateMonthlyReportResponse, error) {
+	out := new(CreateMonthlyReportResponse)
+	err := c.cc.Invoke(ctx, "/pb.MoneyManagement/CreateMonthlyReport", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *moneyManagementClient) GetReportByUser(ctx context.Context, in *GetReportByUserRequest, opts ...grpc.CallOption) (*GetReportByUserResponse, error) {
+	out := new(GetReportByUserResponse)
+	err := c.cc.Invoke(ctx, "/pb.MoneyManagement/GetReportByUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *moneyManagementClient) GetDetailsReportByUser(ctx context.Context, in *GetDetailsReportByUserRequest, opts ...grpc.CallOption) (*GetDetailsReportByUserResponse, error) {
+	out := new(GetDetailsReportByUserResponse)
+	err := c.cc.Invoke(ctx, "/pb.MoneyManagement/GetDetailsReportByUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *moneyManagementClient) GetReportByDate(ctx context.Context, in *GetReportByDateRequest, opts ...grpc.CallOption) (*GetReportByDateResponse, error) {
+	out := new(GetReportByDateResponse)
+	err := c.cc.Invoke(ctx, "/pb.MoneyManagement/GetReportByDate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *moneyManagementClient) GetReportByCategory(ctx context.Context, in *GetReportByCategoryRequest, opts ...grpc.CallOption) (*GetReportByCategoryResponse, error) {
+	out := new(GetReportByCategoryResponse)
+	err := c.cc.Invoke(ctx, "/pb.MoneyManagement/GetReportByCategory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MoneyManagementServer is the server API for MoneyManagement service.
 // All implementations must embed UnimplementedMoneyManagementServer
 // for forward compatibility
@@ -142,6 +202,12 @@ type MoneyManagementServer interface {
 	GetCategories(context.Context, *GetCategoriesRequest) (*GetCategoriesResponse, error)
 	GetTransaction(context.Context, *GetTransactionRequest) (*GetTransactionResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	CreateReport(context.Context, *CreateReportRequest) (*CreateReportResponse, error)
+	CreateMonthlyReport(context.Context, *CreateMonthlyReportRequest) (*CreateMonthlyReportResponse, error)
+	GetReportByUser(context.Context, *GetReportByUserRequest) (*GetReportByUserResponse, error)
+	GetDetailsReportByUser(context.Context, *GetDetailsReportByUserRequest) (*GetDetailsReportByUserResponse, error)
+	GetReportByDate(context.Context, *GetReportByDateRequest) (*GetReportByDateResponse, error)
+	GetReportByCategory(context.Context, *GetReportByCategoryRequest) (*GetReportByCategoryResponse, error)
 	mustEmbedUnimplementedMoneyManagementServer()
 }
 
@@ -178,6 +244,24 @@ func (UnimplementedMoneyManagementServer) GetTransaction(context.Context, *GetTr
 }
 func (UnimplementedMoneyManagementServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedMoneyManagementServer) CreateReport(context.Context, *CreateReportRequest) (*CreateReportResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateReport not implemented")
+}
+func (UnimplementedMoneyManagementServer) CreateMonthlyReport(context.Context, *CreateMonthlyReportRequest) (*CreateMonthlyReportResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMonthlyReport not implemented")
+}
+func (UnimplementedMoneyManagementServer) GetReportByUser(context.Context, *GetReportByUserRequest) (*GetReportByUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReportByUser not implemented")
+}
+func (UnimplementedMoneyManagementServer) GetDetailsReportByUser(context.Context, *GetDetailsReportByUserRequest) (*GetDetailsReportByUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDetailsReportByUser not implemented")
+}
+func (UnimplementedMoneyManagementServer) GetReportByDate(context.Context, *GetReportByDateRequest) (*GetReportByDateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReportByDate not implemented")
+}
+func (UnimplementedMoneyManagementServer) GetReportByCategory(context.Context, *GetReportByCategoryRequest) (*GetReportByCategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReportByCategory not implemented")
 }
 func (UnimplementedMoneyManagementServer) mustEmbedUnimplementedMoneyManagementServer() {}
 
@@ -372,6 +456,114 @@ func _MoneyManagement_GetUser_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MoneyManagement_CreateReport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateReportRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MoneyManagementServer).CreateReport(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.MoneyManagement/CreateReport",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MoneyManagementServer).CreateReport(ctx, req.(*CreateReportRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MoneyManagement_CreateMonthlyReport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMonthlyReportRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MoneyManagementServer).CreateMonthlyReport(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.MoneyManagement/CreateMonthlyReport",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MoneyManagementServer).CreateMonthlyReport(ctx, req.(*CreateMonthlyReportRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MoneyManagement_GetReportByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReportByUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MoneyManagementServer).GetReportByUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.MoneyManagement/GetReportByUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MoneyManagementServer).GetReportByUser(ctx, req.(*GetReportByUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MoneyManagement_GetDetailsReportByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDetailsReportByUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MoneyManagementServer).GetDetailsReportByUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.MoneyManagement/GetDetailsReportByUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MoneyManagementServer).GetDetailsReportByUser(ctx, req.(*GetDetailsReportByUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MoneyManagement_GetReportByDate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReportByDateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MoneyManagementServer).GetReportByDate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.MoneyManagement/GetReportByDate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MoneyManagementServer).GetReportByDate(ctx, req.(*GetReportByDateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MoneyManagement_GetReportByCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReportByCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MoneyManagementServer).GetReportByCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.MoneyManagement/GetReportByCategory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MoneyManagementServer).GetReportByCategory(ctx, req.(*GetReportByCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MoneyManagement_ServiceDesc is the grpc.ServiceDesc for MoneyManagement service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -418,6 +610,30 @@ var MoneyManagement_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUser",
 			Handler:    _MoneyManagement_GetUser_Handler,
+		},
+		{
+			MethodName: "CreateReport",
+			Handler:    _MoneyManagement_CreateReport_Handler,
+		},
+		{
+			MethodName: "CreateMonthlyReport",
+			Handler:    _MoneyManagement_CreateMonthlyReport_Handler,
+		},
+		{
+			MethodName: "GetReportByUser",
+			Handler:    _MoneyManagement_GetReportByUser_Handler,
+		},
+		{
+			MethodName: "GetDetailsReportByUser",
+			Handler:    _MoneyManagement_GetDetailsReportByUser_Handler,
+		},
+		{
+			MethodName: "GetReportByDate",
+			Handler:    _MoneyManagement_GetReportByDate_Handler,
+		},
+		{
+			MethodName: "GetReportByCategory",
+			Handler:    _MoneyManagement_GetReportByCategory_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

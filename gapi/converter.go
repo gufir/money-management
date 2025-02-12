@@ -33,3 +33,13 @@ func ConvertCategory(category db.Category) *pb.Category {
 		Name: category.Name,
 	}
 }
+
+func ConverReport(report db.Report) *pb.Report {
+	return &pb.Report{
+		Id:           report.ID.String(),
+		UserId:       report.UserID.String(),
+		Period:       report.Period,
+		TotalIncome:  float64(report.TotalIncome.Exp),
+		TotalExpense: float64(report.TotalExpense.Exp),
+	}
+}

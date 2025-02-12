@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Money Management API",
-    "version": "1.3",
+    "version": "1.5",
     "contact": {
       "name": "gufir",
       "url": "https://github.com/gufir",
@@ -47,6 +47,74 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/pbCreateCategoriesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
+    "/v1/create_monthly_report": {
+      "post": {
+        "summary": "Create Monthly Report",
+        "description": "Use this API to create a Monthly Report",
+        "operationId": "MoneyManagement_CreateMonthlyReport",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateMonthlyReportResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreateMonthlyReportRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
+    "/v1/create_report": {
+      "post": {
+        "summary": "Create Report",
+        "description": "Use this API to create a Report",
+        "operationId": "MoneyManagement_CreateReport",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateReportResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreateReportRequest"
             }
           }
         ],
@@ -142,6 +210,138 @@
             }
           }
         },
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
+    "/v1/get_details_report_by_user": {
+      "get": {
+        "summary": "Get Report Details by User",
+        "description": "Use this API to Get Details Report by User",
+        "operationId": "MoneyManagement_GetDetailsReportByUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetDetailsReportByUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
+    "/v1/get_report_by_category": {
+      "get": {
+        "summary": "Get Report by Category",
+        "description": "Use this API to Get Report by Category",
+        "operationId": "MoneyManagement_GetReportByCategory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetReportByCategoryResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
+    "/v1/get_report_by_date": {
+      "get": {
+        "summary": "Get Report Details by Date",
+        "description": "Use this API to Get Report by Date",
+        "operationId": "MoneyManagement_GetReportByDate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetReportByDateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
+    "/v1/get_report_by_user": {
+      "get": {
+        "summary": "Get Report by User",
+        "description": "Use this API to Get Report by User",
+        "operationId": "MoneyManagement_GetReportByUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetReportByUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "MoneyManagement"
         ]
@@ -360,6 +560,44 @@
         }
       }
     },
+    "pbCreateMonthlyReportRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "reportId": {
+          "type": "string"
+        }
+      }
+    },
+    "pbCreateMonthlyReportResponse": {
+      "type": "object",
+      "properties": {
+        "report": {
+          "$ref": "#/definitions/pbReport"
+        }
+      }
+    },
+    "pbCreateReportRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "reportId": {
+          "type": "string"
+        }
+      }
+    },
+    "pbCreateReportResponse": {
+      "type": "object",
+      "properties": {
+        "report": {
+          "$ref": "#/definitions/pbReport"
+        }
+      }
+    },
     "pbCreateTransactionRequest": {
       "type": "object",
       "properties": {
@@ -433,6 +671,71 @@
         }
       }
     },
+    "pbGetDetailsReportByUserResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "description": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      }
+    },
+    "pbGetReportByCategoryResponse": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "type": "string"
+        },
+        "totalIncome": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalExpense": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "pbGetReportByDateResponse": {
+      "type": "object",
+      "properties": {
+        "reports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbReportByDate"
+          }
+        }
+      }
+    },
+    "pbGetReportByUserResponse": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "totalIncome": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalExpense": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "pbGetTransactionResponse": {
       "type": "object",
       "properties": {
@@ -488,6 +791,53 @@
           "type": "string"
         },
         "refreshTokenExpiredAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "pbReport": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        },
+        "totalIncome": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalExpense": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "pbReportByDate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "type": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "createdAt": {
           "type": "string",
           "format": "date-time"
         }
