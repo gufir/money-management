@@ -48,14 +48,25 @@ type Transaction struct {
 }
 
 type User struct {
-	ID             int64              `json:"id"`
-	Username       string             `json:"username"`
-	FullName       string             `json:"full_name"`
-	Email          string             `json:"email"`
-	HashedPassword string             `json:"hashed_password"`
-	Role           string             `json:"role"`
-	CreatedAt      time.Time          `json:"created_at"`
-	UpdatedAt      time.Time          `json:"updated_at"`
-	DeletedAt      pgtype.Timestamptz `json:"deleted_at"`
-	UserUuid       uuid.UUID          `json:"user_uuid"`
+	ID              int64              `json:"id"`
+	Username        string             `json:"username"`
+	FullName        string             `json:"full_name"`
+	Email           string             `json:"email"`
+	HashedPassword  string             `json:"hashed_password"`
+	Role            string             `json:"role"`
+	CreatedAt       time.Time          `json:"created_at"`
+	UpdatedAt       time.Time          `json:"updated_at"`
+	DeletedAt       pgtype.Timestamptz `json:"deleted_at"`
+	UserUuid        uuid.UUID          `json:"user_uuid"`
+	IsEmailVerified bool               `json:"is_email_verified"`
+}
+
+type VerifyEmail struct {
+	ID         int64     `json:"id"`
+	UserID     uuid.UUID `json:"user_id"`
+	Email      string    `json:"email"`
+	SecretCode string    `json:"secret_code"`
+	IsUsed     bool      `json:"is_used"`
+	CreatedAt  time.Time `json:"created_at"`
+	ExpiresAt  time.Time `json:"expires_at"`
 }
