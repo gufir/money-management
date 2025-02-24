@@ -17,6 +17,7 @@ type Querier interface {
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateTransaction(ctx context.Context, arg CreateTransactionParams) (Transaction, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	CreateVerifyEmails(ctx context.Context, arg CreateVerifyEmailsParams) (VerifyEmail, error)
 	GetAllCategories(ctx context.Context) ([]Category, error)
 	GetCategoryById(ctx context.Context, id uuid.UUID) (Category, error)
 	GetCategoryByName(ctx context.Context, name string) (Category, error)
@@ -35,6 +36,7 @@ type Querier interface {
 	UpdateCategories(ctx context.Context, arg UpdateCategoriesParams) (Category, error)
 	UpdateTransaction(ctx context.Context, arg UpdateTransactionParams) (Transaction, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
+	UpdateVerifyEmails(ctx context.Context, arg UpdateVerifyEmailsParams) (VerifyEmail, error)
 }
 
 var _ Querier = (*Queries)(nil)
