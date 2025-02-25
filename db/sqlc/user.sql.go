@@ -167,18 +167,21 @@ SET
     hashed_password = COALESCE($1, hashed_password),
     updated_at = COALESCE($2, updated_at),
     full_name = COALESCE($3, full_name),
-    email = COALESCE($4, email)
+    email = COALESCE($4, email),
+    is_email_verified = COALESCE($5, is_email_verified)
 WHERE
-    username = $5
+    username = $6 OR user_uuid = $7
 RETURNING id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified
 `
 
 type UpdateUserParams struct {
-	HashedPassword pgtype.Text        `json:"hashed_password"`
-	UpdatedAt      pgtype.Timestamptz `json:"updated_at"`
-	FullName       pgtype.Text        `json:"full_name"`
-	Email          pgtype.Text        `json:"email"`
-	Username       string             `json:"username"`
+	HashedPassword  pgtype.Text        `json:"hashed_password"`
+	UpdatedAt       pgtype.Timestamptz `json:"updated_at"`
+	FullName        pgtype.Text        `json:"full_name"`
+	Email           pgtype.Text        `json:"email"`
+	IsEmailVerified pgtype.Bool        `json:"is_email_verified"`
+	Username        string             `json:"username"`
+	UserUuid        uuid.UUID          `json:"user_uuid"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
@@ -187,7 +190,9 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		arg.UpdatedAt,
 		arg.FullName,
 		arg.Email,
+		arg.IsEmailVerified,
 		arg.Username,
+		arg.UserUuid,
 	)
 	var i User
 	err := row.Scan(
@@ -204,4 +209,17 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		&i.IsEmailVerified,
 	)
 	return i, err
+}
+
+const verifiedEmail = `-- name: VerifiedEmail :one
+SELECT is_email_verified FROM users
+WHERE user_uuid = $1
+LIMIT 1
+`
+
+func (q *Queries) VerifiedEmail(ctx context.Context, userUuid uuid.UUID) (bool, error) {
+	row := q.db.QueryRow(ctx, verifiedEmail, userUuid)
+	var is_email_verified bool
+	err := row.Scan(&is_email_verified)
+	return is_email_verified, err
 }

@@ -3,12 +3,15 @@ package gapi
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	db "github.com/gufir/money-management/db/sqlc"
 	"github.com/gufir/money-management/pb"
 	"github.com/gufir/money-management/utils"
 	"github.com/gufir/money-management/val"
+	"github.com/gufir/money-management/worker"
+	"github.com/hibiken/asynq"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
@@ -27,15 +30,34 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 		return nil, status.Errorf(codes.Internal, "Failed to hash password: %v", err)
 	}
 
-	arg := db.CreateUserParams{
-		Username:       req.GetUsername(),
-		HashedPassword: hashedPassword,
-		Email:          req.GetEmail(),
-		FullName:       req.GetFullName(),
-		UserUuid:       uuid.New(),
+	arg := db.CreateUserTxParams{
+		CreateUserParams: db.CreateUserParams{
+			Username:       req.GetUsername(),
+			HashedPassword: hashedPassword,
+			Email:          req.GetEmail(),
+			FullName:       req.GetFullName(),
+			UserUuid:       uuid.New(),
+		},
+
+		AfterCreate: func(user db.User) error {
+			taskPayload := &worker.PayloadSendVerifyEmail{
+				UserID: user.UserUuid.String(),
+			}
+
+			opts := []asynq.Option{
+				asynq.MaxRetry(10),
+				asynq.ProcessIn(10 * time.Second),
+				asynq.Queue(worker.QueueCritical),
+			}
+
+			return server.taskDistributor.DistributeTaskVerifyEmail(ctx, taskPayload, opts...)
+		},
 	}
 
-	user, err := server.store.CreateUser(ctx, arg)
+	log.Info().Msgf("creating user ...")
+	time.Sleep(10 * time.Second)
+
+	txResult, err := server.store.CreateUserTx(ctx, arg)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
@@ -49,7 +71,7 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 	}
 
 	rsp := &pb.CreateUserResponse{
-		User: ConvertUser(user),
+		User: ConvertUser(txResult.User),
 	}
 
 	return rsp, nil

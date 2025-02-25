@@ -29,6 +29,15 @@ func (server *Server) LoginUser(ctx context.Context, req *pb.LoginUserRequest) (
 		return nil, status.Errorf(codes.NotFound, "incorrect password: %v", err)
 	}
 
+	verified, err := server.store.VerifiedEmail(ctx, user.UserUuid)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to verify email: %v", err)
+	}
+
+	if !verified {
+		return nil, status.Errorf(codes.PermissionDenied, "email not verified")
+	}
+
 	accessToken, accessPayload, err := server.token.CreateToken(
 		user.UserUuid,
 		user.Username,
