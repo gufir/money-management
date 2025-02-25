@@ -39,7 +39,13 @@ SET
     hashed_password = COALESCE(sqlc.narg(hashed_password), hashed_password),
     updated_at = COALESCE(sqlc.narg(updated_at), updated_at),
     full_name = COALESCE(sqlc.narg(full_name), full_name),
-    email = COALESCE(sqlc.narg(email), email)
+    email = COALESCE(sqlc.narg(email), email),
+    is_email_verified = COALESCE(sqlc.narg(is_email_verified), is_email_verified)
 WHERE
-    username = sqlc.arg(username)
+    username = sqlc.arg(username) OR user_uuid = sqlc.arg(user_uuid)
 RETURNING *;
+
+-- name: VerifiedEmail :one
+SELECT is_email_verified FROM users
+WHERE user_uuid = $1
+LIMIT 1;

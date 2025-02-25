@@ -34,6 +34,7 @@ type MoneyManagementClient interface {
 	GetDetailsReportByUser(ctx context.Context, in *GetDetailsReportByUserRequest, opts ...grpc.CallOption) (*GetDetailsReportByUserResponse, error)
 	GetReportByDate(ctx context.Context, in *GetReportByDateRequest, opts ...grpc.CallOption) (*GetReportByDateResponse, error)
 	GetReportByCategory(ctx context.Context, in *GetReportByCategoryRequest, opts ...grpc.CallOption) (*GetReportByCategoryResponse, error)
+	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
 }
 
 type moneyManagementClient struct {
@@ -188,6 +189,15 @@ func (c *moneyManagementClient) GetReportByCategory(ctx context.Context, in *Get
 	return out, nil
 }
 
+func (c *moneyManagementClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error) {
+	out := new(VerifyEmailResponse)
+	err := c.cc.Invoke(ctx, "/pb.MoneyManagement/VerifyEmail", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MoneyManagementServer is the server API for MoneyManagement service.
 // All implementations must embed UnimplementedMoneyManagementServer
 // for forward compatibility
@@ -208,6 +218,7 @@ type MoneyManagementServer interface {
 	GetDetailsReportByUser(context.Context, *GetDetailsReportByUserRequest) (*GetDetailsReportByUserResponse, error)
 	GetReportByDate(context.Context, *GetReportByDateRequest) (*GetReportByDateResponse, error)
 	GetReportByCategory(context.Context, *GetReportByCategoryRequest) (*GetReportByCategoryResponse, error)
+	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
 	mustEmbedUnimplementedMoneyManagementServer()
 }
 
@@ -262,6 +273,9 @@ func (UnimplementedMoneyManagementServer) GetReportByDate(context.Context, *GetR
 }
 func (UnimplementedMoneyManagementServer) GetReportByCategory(context.Context, *GetReportByCategoryRequest) (*GetReportByCategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetReportByCategory not implemented")
+}
+func (UnimplementedMoneyManagementServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
 }
 func (UnimplementedMoneyManagementServer) mustEmbedUnimplementedMoneyManagementServer() {}
 
@@ -564,6 +578,24 @@ func _MoneyManagement_GetReportByCategory_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MoneyManagement_VerifyEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MoneyManagementServer).VerifyEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.MoneyManagement/VerifyEmail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MoneyManagementServer).VerifyEmail(ctx, req.(*VerifyEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MoneyManagement_ServiceDesc is the grpc.ServiceDesc for MoneyManagement service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -634,6 +666,10 @@ var MoneyManagement_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetReportByCategory",
 			Handler:    _MoneyManagement_GetReportByCategory_Handler,
+		},
+		{
+			MethodName: "VerifyEmail",
+			Handler:    _MoneyManagement_VerifyEmail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

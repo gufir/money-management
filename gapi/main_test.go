@@ -10,17 +10,18 @@ import (
 	db "github.com/gufir/money-management/db/sqlc"
 	"github.com/gufir/money-management/token"
 	"github.com/gufir/money-management/utils"
+	"github.com/gufir/money-management/worker"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/metadata"
 )
 
-func newTestServer(t *testing.T, store db.Store) *Server {
+func newTestServer(t *testing.T, store db.Store, taskDistributor worker.TaskDistributor) *Server {
 	config := utils.Config{
 		TokenSymmetricKey:   utils.RandomString(32),
 		AccessTokenDuration: time.Hour,
 	}
 
-	server, err := NewServer(config, store)
+	server, err := NewServer(config, store, taskDistributor)
 	require.NoError(t, err)
 
 	return server

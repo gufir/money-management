@@ -9,17 +9,19 @@ import (
 	"github.com/gufir/money-management/pb"
 	"github.com/gufir/money-management/token"
 	"github.com/gufir/money-management/utils"
+	"github.com/gufir/money-management/worker"
 )
 
 type Server struct {
 	pb.UnimplementedMoneyManagementServer
-	config      utils.Config
-	store       db.Store
-	token       token.Maker
-	redisClient *redis.Client
+	config          utils.Config
+	store           db.Store
+	token           token.Maker
+	redisClient     *redis.Client
+	taskDistributor worker.TaskDistributor
 }
 
-func NewServer(config utils.Config, store db.Store) (*Server, error) {
+func NewServer(config utils.Config, store db.Store, taskDistributor worker.TaskDistributor) (*Server, error) {
 	tokenMaker, err := token.NewJWTMaker(config.TokenSymmetricKey)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create token maker %w", err)
@@ -37,10 +39,11 @@ func NewServer(config utils.Config, store db.Store) (*Server, error) {
 	}
 
 	server := &Server{
-		config:      config,
-		store:       store,
-		token:       tokenMaker,
-		redisClient: redisClient,
+		config:          config,
+		store:           store,
+		token:           tokenMaker,
+		redisClient:     redisClient,
+		taskDistributor: taskDistributor,
 	}
 
 	return server, nil

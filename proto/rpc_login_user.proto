@@ -10,6 +10,7 @@ option go_package = "github.com/gufir/money-management/pb";
 message LoginUserRequest {
     string username = 1;
     string password = 2;
+    bool is_email_verified = 3;
 }
 
 message LoginUserResponse {

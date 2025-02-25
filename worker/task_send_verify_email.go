@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/google/uuid"
 	db "github.com/gufir/money-management/db/sqlc"
 	"github.com/gufir/money-management/utils"
 	"github.com/hibiken/asynq"
@@ -45,7 +46,12 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Cont
 		return fmt.Errorf("failed to unmarshal payload: %w", asynq.SkipRetry)
 	}
 
-	user, err := processor.store.GetUserByUsername(ctx, payload.UserID)
+	userID, err := uuid.Parse(payload.UserID)
+	if err != nil {
+		return fmt.Errorf("failed to parse user id: %w", asynq.SkipRetry)
+	}
+
+	user, err := processor.store.GetUserByUserId(ctx, userID)
 	if err != nil {
 
 		if errors.Is(err, db.ErrRecordNotFound) {
