@@ -64,6 +64,11 @@ const router = createRouter({
       name: 'AccessDenied',
       component: () => import('@/views/pages/Unauthorized.vue'),
     },
+    {
+      path: '/verify-email',
+      name: 'VerifyEmail',
+      component: () => import('@/components/VerifyEmail.vue'),
+    },
   ],
 })
 

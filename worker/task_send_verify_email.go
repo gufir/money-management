@@ -72,11 +72,35 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Cont
 	}
 
 	subject := "Welcome to Money Wise! Verify your email"
-	verifyUrl := fmt.Sprintf("http://localhost:8080/v1/verify_email?email_id=%d&secret_code=%s", verifyemail.ID, verifyemail.SecretCode)
-	content := fmt.Sprintf(`Hello %s, <br/>
-	Thank You for Registering With Us!<br/> 
-	Please <a href='%s'>Click Here </a> to Verify your email address <br/>
-	`, user.FullName, verifyUrl)
+	frontendUrl := "http://localhost:3000/verify-email"
+	verifyUrl := fmt.Sprintf("%s?email_id=%d&secret_code=%s", frontendUrl, verifyemail.ID, verifyemail.SecretCode)
+	content := fmt.Sprintf(`
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Verify Your Email</title>
+	</head>
+	<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px;">
+		<table width="100%%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background: white; padding: 20px; margin: auto; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
+			<tr>
+				<td style="text-align: center;">
+					<h2 style="color: #333;">Welcome to <span style="color: #007bff;">Money Wise</span>!</h2>
+					<p style="color: #666; font-size: 16px;">Hello %s,</p>
+					<p style="color: #666; font-size: 16px;">Thank you for registering with us!</p>
+					<p style="color: #666; font-size: 16px;">Please click the button below to verify your email address:</p>
+					<a href="%s" style="display: inline-block; padding: 12px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; font-size: 16px; margin-top: 10px;">
+						Verify Email
+					</a>
+					<p style="color: #666; font-size: 14px; margin-top: 20px;">If the button doesn't work, you can also use the following link:</p>
+					<p style="word-wrap: break-word;"><a href="%s" style="color: #007bff;">%s</a></p>
+					<p style="color: #888; font-size: 12px; margin-top: 20px;">If you didn't create an account, please ignore this email.</p>
+				</td>
+			</tr>
+		</table>
+	</body>
+	</html>
+	`, user.FullName, verifyUrl, verifyUrl, verifyUrl)
 
 	to := []string{user.Email}
 
