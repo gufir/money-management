@@ -50,13 +50,13 @@ const router = createRouter({
     {
       path: '/settings',
       name: 'Settings',
-      meta: { requireAuth: true },
+      meta: { requiresAuth: true },
       component: () => import('@/components/ProfileSetting.vue'),
     },
     {
       path: '/reports',
       name: 'Reports',
-      meta: { requireAuth: true },
+      meta: { requiresAuth: true },
       component: () => import('@/components/Report.vue'),
     },
     {
