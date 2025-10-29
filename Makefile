@@ -1,16 +1,16 @@
 DB_URL= postgresql://root:secret@localhost:5432/money_management?sslmode=disable
 
 posgresql:
-	docker start db_postgres_1
+	docker start db_postgres
 
 createdb:
-	docker exec -it  db_postgres_1 createdb --username=root --owner=root money_management
+	docker exec -it  db_postgres createdb --username=root --owner=root money_management
 
 migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up
 
 dropdb:
-	docker exec -it  db_postgres_1 dropdb --username=root money_management
+	docker exec -it  db_postgres dropdb --username=root money_management
 
 migratedown:
 	migrate -path db/migration -database "$(DB_URL)" -verbose down
@@ -51,4 +51,14 @@ proto1:
 		proto/*.proto
 		statik -src=./doc/swagger -dest=./doc/
 
-.PHONY: server posgresql sqlc createdb migrateup migratedown migration dropdb mock new_migration proto proto1
+container:
+	docker run -d \
+  	--name db_postgres \
+  	-e POSTGRES_USER=root \
+  	-e POSTGRES_PASSWORD=secret \
+  	-p 5432:5432 \
+  	postgres
+
+
+
+.PHONY: server posgresql sqlc createdb migrateup migratedown migration dropdb mock new_migration proto proto1 container run
