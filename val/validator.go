@@ -9,6 +9,8 @@ import (
 var (
 	isValidUsername = regexp.MustCompile(`^[a-z0-9_]+$`).MatchString
 	isValidFullName = regexp.MustCompile(`^[a-zA-Z\s]+$`).MatchString
+	hasLetter       = regexp.MustCompile(`[A-Za-z]`).MatchString
+	hasNumber       = regexp.MustCompile(`[0-9]`).MatchString
 )
 
 func ValidateString(value string, minLength int, maxLength int) error {
@@ -31,7 +33,15 @@ func ValidateUsername(value string) error {
 }
 
 func ValidatePassword(value string) error {
-	return ValidateString(value, 6, 100)
+	if err := ValidateString(value, 6, 100); err != nil {
+		return err
+	}
+
+	if !hasLetter(value) || !hasNumber(value) {
+		return fmt.Errorf("must contain at least one letter and one number")
+	}
+
+	return nil
 }
 
 func ValidateEmail(value string) error {
