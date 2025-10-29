@@ -51,16 +51,30 @@ const handlerLogin = async () => {
 
     router.push('/')
   } catch (error: any) {
-    if (error.response && error.response.status === 404) {
-      errorMessages.value = error.response.data.message
-    } else {
-      errorMessages.value = 'An error occurred. Please try again later.'
+    let userError = 'An error occurred. Please try again later.'
+
+    if (error.response) {
+      switch (error.response.status) {
+        case 404:
+          userError = 'Username or password is incorrect.'
+          break
+        case 403:
+        case 401:
+          userError = 'Access denied. Please verify your credentials.'
+          break
+        case 400:
+          userError = 'Invalid input. Please check your data.'
+          break
+        case 500:
+          userError = 'Server error. Please try again later.'
+          break
+      }
     }
 
     toast.add({
       severity: 'error',
       summary: 'Login Failed',
-      detail: errorMessages.value,
+      detail: userError,
       life: 3000,
     })
   }
