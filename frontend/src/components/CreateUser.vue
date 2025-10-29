@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import Toast from 'primevue/toast'
 import InputGroup from 'primevue/inputgroup'
@@ -9,13 +9,19 @@ import FloatLabel from 'primevue/floatlabel'
 import Button from 'primevue/button'
 import axios from 'axios'
 import router from '@/router'
+import {
+  validateEmail,
+  validateFullName,
+  validatePassword,
+  validateUsername,
+} from '@/utils/validator'
 
 const username = ref('')
 const full_name = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const email = ref('')
-const errorMessages = ref('')
+const errorMessages = ref<string[]>([])
 
 const isCreateDisabled = computed(() => {
   return (
@@ -28,15 +34,72 @@ const isCreateDisabled = computed(() => {
   )
 })
 
+const errors = ref({
+  username: '',
+  full_name: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+})
+
 const toast = useToast()
 
+// 🔍 Watch setiap field dan validasi real-time
+watch(username, (val) => {
+  errors.value.username = validateUsername(val) || ''
+})
+watch(full_name, (val) => {
+  errors.value.full_name = validateFullName(val) || ''
+})
+watch(email, (val) => {
+  errors.value.email = validateEmail(val) || ''
+})
+watch(password, (val) => {
+  errors.value.password = validatePassword(val) || ''
+  if (confirmPassword.value && val !== confirmPassword.value) {
+    errors.value.confirmPassword = 'Passwords do not match'
+  } else {
+    errors.value.confirmPassword = ''
+  }
+})
+watch(confirmPassword, (val) => {
+  if (val !== password.value) {
+    errors.value.confirmPassword = 'Passwords do not match'
+  } else {
+    errors.value.confirmPassword = ''
+  }
+})
+
 const handleCreateUser = async () => {
-  if (password.value !== confirmPassword.value) {
-    errorMessages.value = 'Passwords do not match'
+  // Validasi input sebelum mengirim permintaan
+  // errorMessages.value = []
+  // const validations = [
+  //   validateUsername(username.value),
+  //   validateFullName(full_name.value),
+  //   validateEmail(email.value),
+  //   validatePassword(password.value),
+  // ].filter(Boolean) as string[]
+
+  // if (password.value !== confirmPassword.value) {
+  //   validations.push('Passwords do not match.')
+  // }
+
+  // if (validations.length > 0) {
+  //   errorMessages.value = validations
+  //   toast.add({
+  //     severity: 'error',
+  //     summary: 'Validation Failed',
+  //     detail: validations.join('\n'),
+  //     life: 4000,
+  //   })
+  //   return
+  // }
+
+  if (isCreateDisabled.value) {
     toast.add({
       severity: 'error',
-      summary: 'Create User Failed',
-      detail: errorMessages.value,
+      summary: 'Validation Failed',
+      detail: 'Please fix all validation errors before submitting.',
       life: 3000,
     })
     return
@@ -89,55 +152,77 @@ const handleCreateUser = async () => {
       </div>
 
       <div class="flex flex-col gap-5">
-        <InputGroup>
-          <InputGroupAddon>
-            <i class="pi pi-user"></i>
-          </InputGroupAddon>
-          <FloatLabel>
-            <InputText id="username" v-model="username" />
-            <label for="username">Username</label>
-          </FloatLabel>
-        </InputGroup>
+        <!-- Username Field -->
+        <div>
+          <InputGroup>
+            <InputGroupAddon>
+              <i class="pi pi-user"></i>
+            </InputGroupAddon>
+            <FloatLabel>
+              <InputText id="username" v-model="username" />
+              <label for="username">Username</label>
+            </FloatLabel>
+          </InputGroup>
+          <small v-if="errors.username" class="text-red-500">{{ errors.username }}</small>
+        </div>
 
-        <InputGroup>
-          <InputGroupAddon>
-            <i class="pi pi-user"></i>
-          </InputGroupAddon>
-          <FloatLabel>
-            <InputText id="fullname" v-model="full_name" />
-            <label for="fullname">Full Name</label>
-          </FloatLabel>
-        </InputGroup>
+        <!-- Full Name Field-->
+        <div>
+          <InputGroup>
+            <InputGroupAddon>
+              <i class="pi pi-user"></i>
+            </InputGroupAddon>
+            <FloatLabel>
+              <InputText id="fullname" v-model="full_name" />
+              <label for="fullname">Full Name</label>
+            </FloatLabel>
+          </InputGroup>
+          <small v-if="errors.full_name" class="text-red-500">{{ errors.full_name }}</small>
+        </div>
 
-        <InputGroup>
-          <InputGroupAddon>
-            <i class="pi pi-envelope"></i>
-          </InputGroupAddon>
-          <FloatLabel>
-            <InputText id="email" type="email" v-model="email" />
-            <label for="email">Email</label>
-          </FloatLabel>
-        </InputGroup>
+        <!-- Email Field -->
+        <div>
+          <InputGroup>
+            <InputGroupAddon>
+              <i class="pi pi-envelope"></i>
+            </InputGroupAddon>
+            <FloatLabel>
+              <InputText id="email" type="email" v-model="email" />
+              <label for="email">Email</label>
+            </FloatLabel>
+          </InputGroup>
+          <small v-if="errors.email" class="text-red-500">{{ errors.email }}</small>
+        </div>
 
-        <InputGroup>
-          <InputGroupAddon>
-            <i class="pi pi-lock"></i>
-          </InputGroupAddon>
-          <FloatLabel>
-            <InputText id="password" type="password" v-model="password" />
-            <label for="password">Password</label>
-          </FloatLabel>
-        </InputGroup>
+        <!-- Password Field -->
+        <div>
+          <InputGroup>
+            <InputGroupAddon>
+              <i class="pi pi-lock"></i>
+            </InputGroupAddon>
+            <FloatLabel>
+              <InputText id="password" type="password" v-model="password" />
+              <label for="password">Password</label>
+            </FloatLabel>
+          </InputGroup>
+          <small v-if="errors.password" class="text-red-500">{{ errors.password }}</small>
+        </div>
 
-        <InputGroup>
-          <InputGroupAddon>
-            <i class="pi pi-lock"></i>
-          </InputGroupAddon>
-          <FloatLabel>
-            <InputText id="confirm-password" type="password" v-model="confirmPassword" />
-            <label for="confirm-password">Confirm Password</label>
-          </FloatLabel>
-        </InputGroup>
+        <!-- Confirm Password Field -->
+        <div>
+          <InputGroup>
+            <InputGroupAddon>
+              <i class="pi pi-lock"></i>
+            </InputGroupAddon>
+            <FloatLabel>
+              <InputText id="confirm-password" type="password" v-model="confirmPassword" />
+              <label for="confirm-password">Confirm Password</label>
+            </FloatLabel>
+          </InputGroup>
+          <small v-if="errors.confirmPassword" class="text-red-500">{{
+            errors.confirmPassword
+          }}</small>
+        </div>
 
         <Button
           label="Create User"
@@ -173,5 +258,12 @@ body {
 .hover-button:hover {
   background-color: #23d628 !important;
   border-color: #23d628 !important;
+}
+
+.text-red-500 {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: block;
 }
 </style>

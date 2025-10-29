@@ -33,7 +33,7 @@ onMounted(async () => {
     const data: VerifyEmailResponse = await response.json();
 
     if (response.ok && data.is_verified) {
-      statusMessage.value = '✅ Email verified successfully! Redirecting to login...';
+      statusMessage.value = 'Email verified successfully! Redirecting to login...';
       setTimeout(() => {
         router.push('/login-user');
       }, 6000);
