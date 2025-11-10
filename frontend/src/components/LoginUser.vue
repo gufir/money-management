@@ -79,6 +79,10 @@ const handlerLogin = async () => {
     })
   }
 }
+
+const handleGoogleLogin = () => {
+  console.log('Redirecting to Google OAuth...')
+}
 </script>
 
 <template>
@@ -121,6 +125,15 @@ const handlerLogin = async () => {
           @click="handlerLogin"
         />
 
+        <Button @click="handleGoogleLogin" class="google-btn w-full p-button-outlined">
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt="Google Logo"
+            class="google-icon"
+          />
+          <span class="google-text">Sign in with Google</span>
+        </Button>
+
         <Button
           label="Create User"
           class="w-full p-button-outlined create-user"
@@ -160,5 +173,32 @@ body {
 
 .create-user {
   color: #27fb2d !important;
+}
+
+.google-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  background-color: #fff !important;
+  border-color: #ccc !important;
+  color: #444 !important;
+  height: 42px;
+  font-weight: 500;
+}
+
+.google-btn:hover {
+  background-color: #f7f7f7 !important;
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.google-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
 }
 </style>
