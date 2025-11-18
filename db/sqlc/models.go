@@ -16,6 +16,16 @@ type Category struct {
 	Name string    `json:"name"`
 }
 
+type PasswordResetToken struct {
+	ID        uuid.UUID          `json:"id"`
+	UserID    uuid.UUID          `json:"user_id"`
+	Token     string             `json:"token"`
+	IsUsed    bool               `json:"is_used"`
+	ExpiredAt time.Time          `json:"expired_at"`
+	CreatedAt time.Time          `json:"created_at"`
+	UsedAt    pgtype.Timestamptz `json:"used_at"`
+}
+
 type Report struct {
 	ID           uuid.UUID          `json:"id"`
 	UserID       uuid.UUID          `json:"user_id"`
@@ -48,17 +58,18 @@ type Transaction struct {
 }
 
 type User struct {
-	ID              int64              `json:"id"`
-	Username        string             `json:"username"`
-	FullName        string             `json:"full_name"`
-	Email           string             `json:"email"`
-	HashedPassword  string             `json:"hashed_password"`
-	Role            string             `json:"role"`
-	CreatedAt       time.Time          `json:"created_at"`
-	UpdatedAt       time.Time          `json:"updated_at"`
-	DeletedAt       pgtype.Timestamptz `json:"deleted_at"`
-	UserUuid        uuid.UUID          `json:"user_uuid"`
-	IsEmailVerified bool               `json:"is_email_verified"`
+	ID                int64              `json:"id"`
+	Username          string             `json:"username"`
+	FullName          string             `json:"full_name"`
+	Email             string             `json:"email"`
+	HashedPassword    string             `json:"hashed_password"`
+	Role              string             `json:"role"`
+	CreatedAt         time.Time          `json:"created_at"`
+	UpdatedAt         time.Time          `json:"updated_at"`
+	DeletedAt         pgtype.Timestamptz `json:"deleted_at"`
+	UserUuid          uuid.UUID          `json:"user_uuid"`
+	IsEmailVerified   bool               `json:"is_email_verified"`
+	PasswordChangedAt pgtype.Timestamptz `json:"password_changed_at"`
 }
 
 type VerifyEmail struct {

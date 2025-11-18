@@ -18,6 +18,7 @@ import "rpc_create_report.proto";
 import "rpc_create_monthly_report.proto";
 import "rpc_get_report.proto";
 import "rpc_verify_email.proto";
+import "rpc_forgot_password.proto";
 
 option go_package = "github.com/gufir/money-management/pb";
 
@@ -227,6 +228,30 @@ service MoneyManagement {
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to verify user email."
             summary: "Verify Email"
+        };
+    };
+
+    rpc ForgotPassword (ForgotPasswordRequest) returns (ForgotPasswordResponse){
+        option (google.api.http) = {
+            post: "/v1/forgot_password"
+            body: "*"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to initiate a password reset."
+            summary: "Forgot Password"
+        };
+    };
+
+    rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse){
+        option (google.api.http) = {
+            post: "/v1/reset_password"
+            body: "*"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to reset the password."
+            summary: "Reset Password"
         };
     };
 }

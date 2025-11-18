@@ -49,3 +49,12 @@ RETURNING *;
 SELECT is_email_verified FROM users
 WHERE user_uuid = $1
 LIMIT 1;
+
+-- name: UpdateUserPassword :one
+UPDATE users
+SET 
+    hashed_password = $2,
+    password_changed_at = now(),
+    updated_at = now()
+WHERE user_uuid = $1
+RETURNING *;
