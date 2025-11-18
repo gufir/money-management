@@ -26,7 +26,7 @@ INSERT INTO users (
     $3,
     $4,
     $5
-) RETURNING id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified
+) RETURNING id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified, password_changed_at
 `
 
 type CreateUserParams struct {
@@ -58,12 +58,13 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.DeletedAt,
 		&i.UserUuid,
 		&i.IsEmailVerified,
+		&i.PasswordChangedAt,
 	)
 	return i, err
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified FROM users 
+SELECT id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified, password_changed_at FROM users 
 WHERE email = $1
 LIMIT 1
 `
@@ -83,12 +84,13 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.DeletedAt,
 		&i.UserUuid,
 		&i.IsEmailVerified,
+		&i.PasswordChangedAt,
 	)
 	return i, err
 }
 
 const getUserById = `-- name: GetUserById :one
-SELECT id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified FROM users 
+SELECT id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified, password_changed_at FROM users 
 WHERE id = $1
 LIMIT 1
 `
@@ -108,12 +110,13 @@ func (q *Queries) GetUserById(ctx context.Context, id int64) (User, error) {
 		&i.DeletedAt,
 		&i.UserUuid,
 		&i.IsEmailVerified,
+		&i.PasswordChangedAt,
 	)
 	return i, err
 }
 
 const getUserByUserId = `-- name: GetUserByUserId :one
-SELECT id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified FROM users 
+SELECT id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified, password_changed_at FROM users 
 WHERE user_uuid = $1
 `
 
@@ -132,12 +135,13 @@ func (q *Queries) GetUserByUserId(ctx context.Context, userUuid uuid.UUID) (User
 		&i.DeletedAt,
 		&i.UserUuid,
 		&i.IsEmailVerified,
+		&i.PasswordChangedAt,
 	)
 	return i, err
 }
 
 const getUserByUsername = `-- name: GetUserByUsername :one
-SELECT id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified FROM users 
+SELECT id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified, password_changed_at FROM users 
 WHERE username = $1
 LIMIT 1
 `
@@ -157,6 +161,7 @@ func (q *Queries) GetUserByUsername(ctx context.Context, username string) (User,
 		&i.DeletedAt,
 		&i.UserUuid,
 		&i.IsEmailVerified,
+		&i.PasswordChangedAt,
 	)
 	return i, err
 }
@@ -171,7 +176,7 @@ SET
     is_email_verified = COALESCE($5, is_email_verified)
 WHERE
     username = $6 OR user_uuid = $7
-RETURNING id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified
+RETURNING id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified, password_changed_at
 `
 
 type UpdateUserParams struct {
@@ -207,6 +212,42 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		&i.DeletedAt,
 		&i.UserUuid,
 		&i.IsEmailVerified,
+		&i.PasswordChangedAt,
+	)
+	return i, err
+}
+
+const updateUserPassword = `-- name: UpdateUserPassword :one
+UPDATE users
+SET 
+    hashed_password = $2,
+    password_changed_at = now(),
+    updated_at = now()
+WHERE user_uuid = $1
+RETURNING id, username, full_name, email, hashed_password, role, created_at, updated_at, deleted_at, user_uuid, is_email_verified, password_changed_at
+`
+
+type UpdateUserPasswordParams struct {
+	UserUuid       uuid.UUID `json:"user_uuid"`
+	HashedPassword string    `json:"hashed_password"`
+}
+
+func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (User, error) {
+	row := q.db.QueryRow(ctx, updateUserPassword, arg.UserUuid, arg.HashedPassword)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.FullName,
+		&i.Email,
+		&i.HashedPassword,
+		&i.Role,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+		&i.UserUuid,
+		&i.IsEmailVerified,
+		&i.PasswordChangedAt,
 	)
 	return i, err
 }

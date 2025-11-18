@@ -13,6 +13,7 @@ import (
 type Querier interface {
 	CreateCategories(ctx context.Context, arg CreateCategoriesParams) (Category, error)
 	CreateMonthlyReport(ctx context.Context, arg CreateMonthlyReportParams) (Report, error)
+	CreatePasswordReset(ctx context.Context, arg CreatePasswordResetParams) (PasswordResetToken, error)
 	CreateReportUser(ctx context.Context, arg CreateReportUserParams) (Report, error)
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateTransaction(ctx context.Context, arg CreateTransactionParams) (Transaction, error)
@@ -22,6 +23,7 @@ type Querier interface {
 	GetCategoryById(ctx context.Context, id uuid.UUID) (Category, error)
 	GetCategoryByName(ctx context.Context, name string) (Category, error)
 	GetDetailsReportByUser(ctx context.Context, userID uuid.UUID) ([]GetDetailsReportByUserRow, error)
+	GetPasswordResetToken(ctx context.Context, token string) (PasswordResetToken, error)
 	GetReportByCategory(ctx context.Context) ([]GetReportByCategoryRow, error)
 	GetReportByDate(ctx context.Context, arg GetReportByDateParams) ([]GetReportByDateRow, error)
 	GetReportByUser(ctx context.Context, userID uuid.UUID) (GetReportByUserRow, error)
@@ -36,7 +38,9 @@ type Querier interface {
 	UpdateCategories(ctx context.Context, arg UpdateCategoriesParams) (Category, error)
 	UpdateTransaction(ctx context.Context, arg UpdateTransactionParams) (Transaction, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
+	UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (User, error)
 	UpdateVerifyEmails(ctx context.Context, arg UpdateVerifyEmailsParams) (VerifyEmail, error)
+	UsePasswordResetToken(ctx context.Context, id uuid.UUID) error
 	VerifiedEmail(ctx context.Context, userUuid uuid.UUID) (bool, error)
 }
 

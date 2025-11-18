@@ -191,6 +191,40 @@
         ]
       }
     },
+    "/v1/forgot_password": {
+      "post": {
+        "summary": "Forgot Password",
+        "description": "Use this API to initiate a password reset.",
+        "operationId": "MoneyManagement_ForgotPassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbForgotPasswordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbForgotPasswordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
     "/v1/get_categories": {
       "get": {
         "summary": "Get all categories",
@@ -421,6 +455,40 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/pbLoginUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MoneyManagement"
+        ]
+      }
+    },
+    "/v1/reset_password": {
+      "post": {
+        "summary": "Reset Password",
+        "description": "Use this API to reset the password.",
+        "operationId": "MoneyManagement_ResetPassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbResetPasswordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbResetPasswordRequest"
             }
           }
         ],
@@ -698,6 +766,22 @@
         }
       }
     },
+    "pbForgotPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "pbForgotPasswordResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
     "pbGetCategoriesResponse": {
       "type": "object",
       "properties": {
@@ -882,6 +966,25 @@
         "createdAt": {
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "pbResetPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "newPassword": {
+          "type": "string"
+        }
+      }
+    },
+    "pbResetPasswordResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
         }
       }
     },
