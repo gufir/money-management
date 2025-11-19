@@ -41,6 +41,11 @@ func (server *Server) ResetPassword(ctx context.Context, req *pb.ResetPasswordRe
 		return nil, status.Errorf(codes.Internal, "Failed to update password: %v", err)
 	}
 
+	err = server.store.UsePasswordResetToken(ctx, tokenObj.ID)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Failed to mark reset token as used: %v", err)
+	}
+
 	return &pb.ResetPasswordResponse{
 		Message: "Password has been reset successfully",
 	}, nil

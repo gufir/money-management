@@ -5,11 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"time"
 
-	"github.com/google/uuid"
 	db "github.com/gufir/money-management/db/sqlc"
-	"github.com/gufir/money-management/utils"
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
 )
@@ -32,24 +29,11 @@ func (processor *RedisTaskProcessor) ProcessTaskSendForgotPassword(
 		return fmt.Errorf("failed to get user: %w", err)
 	}
 
-	resetToken := utils.RandomString(48)
-	expires := time.Now().Add(15 * time.Minute)
-
-	resetRecord, err := processor.store.CreatePasswordReset(ctx, db.CreatePasswordResetParams{
-		ID:        uuid.New(),
-		UserID:    user.UserUuid,
-		Token:     resetToken,
-		ExpiredAt: expires,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create password reset record: %w", err)
-	}
-
 	resetUrl := fmt.Sprintf(
 		"http://localhost:3000/reset-password?id=%s&user_id=%s&token=%s",
-		resetRecord.ID,
-		resetRecord.UserID,
-		resetRecord.Token,
+		payload.ResetID,
+		user.UserUuid,
+		payload.Token,
 	)
 
 	subject := "Reset Your Password - Money Wise"

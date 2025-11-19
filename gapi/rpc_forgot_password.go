@@ -32,7 +32,7 @@ func (server *Server) ForgotPassword(ctx context.Context, req *pb.ForgotPassword
 
 	expires := time.Now().Add(15 * time.Minute)
 
-	_, err = server.store.CreatePasswordReset(ctx, db.CreatePasswordResetParams{
+	rst, err := server.store.CreatePasswordReset(ctx, db.CreatePasswordResetParams{
 		ID:        uuid.New(),
 		UserID:    user.UserUuid,
 		Token:     token,
@@ -44,8 +44,9 @@ func (server *Server) ForgotPassword(ctx context.Context, req *pb.ForgotPassword
 	}
 
 	taskPayload := &worker.PayloadSendForgotPassword{
-		Email: user.Email,
-		Token: token,
+		ResetID: rst.ID,
+		Email:   user.Email,
+		Token:   token,
 	}
 
 	opts := []asynq.Option{

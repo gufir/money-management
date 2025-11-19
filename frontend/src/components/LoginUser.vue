@@ -115,7 +115,12 @@ const handleGoogleLogin = () => {
         </InputGroup>
 
         <div class="text-left">
-          <a href="#" class="text-sm forgot-password">Forgot Password?</a>
+          <a
+            class="text-sm forgot-password cursor-pointer"
+            @click="() => router.push('/forgot-password')"
+          >
+            Forgot Password?
+          </a>
         </div>
 
         <Button

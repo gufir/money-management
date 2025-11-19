@@ -69,6 +69,12 @@ const router = createRouter({
       name: 'VerifyEmail',
       component: () => import('@/components/VerifyEmail.vue'),
     },
+
+    {
+      path: '/forgot-password',
+      name: 'ForgotPassword',
+      component: () => import('@/components/ForgotPassword.vue'),
+    },
   ],
 })
 

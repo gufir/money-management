@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
 )
@@ -12,8 +13,9 @@ import (
 const TaskSendForgotPassword = "send_forgot_password"
 
 type PayloadSendForgotPassword struct {
-	Email string `json:"email"`
-	Token string `json:"token"`
+	Email   string    `json:"email"`
+	Token   string    `json:"token"`
+	ResetID uuid.UUID `json:"id"`
 }
 
 func (distributor *RedisTaskDistributor) DistributeTaskResetPassword(
